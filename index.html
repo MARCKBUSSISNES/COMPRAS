@@ -4,38 +4,44 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
   <meta name="theme-color" content="#0b0f14" />
-  <title>Compras — Control Minimal</title>
+  <title>Control de Compras — Marck Business</title>
 
   <style>
     :root{
       --bg:#0b0f14;
       --card: rgba(255,255,255,.06);
+      --card2: rgba(255,255,255,.08);
       --line: rgba(255,255,255,.10);
       --text:#f3f4f6;
       --muted:#a6adbb;
-      --accent:#0a84ff;
-      --danger:#ff453a;
+      --accent:#0a84ff;   /* iOS blue */
+      --danger:#ff453a;   /* iOS red */
+      --ok:#30d158;       /* iOS green */
+      --warn:#ff9f0a;     /* iOS orange */
       --shadow: 0 18px 60px rgba(0,0,0,.40);
       --r: 18px;
       --pad: 16px;
       --tap: 46px;
     }
+
     *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
     body{
       margin:0;
-      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
       background:
         radial-gradient(900px 520px at 20% 0%, rgba(10,132,255,.14), transparent 60%),
         radial-gradient(700px 480px at 90% 10%, rgba(48,209,88,.10), transparent 55%),
+        radial-gradient(900px 650px at 60% 120%, rgba(255,159,10,.08), transparent 55%),
         var(--bg);
       color: var(--text);
-      padding-bottom: calc(env(safe-area-inset-bottom) + 20px);
+      padding-bottom: calc(env(safe-area-inset-bottom) + 22px);
     }
 
+    /* Topbar */
     .topbar{
       position: sticky;
       top:0;
-      z-index: 20;
+      z-index: 30;
       padding: calc(env(safe-area-inset-top) + 10px) 14px 12px;
       backdrop-filter: blur(18px);
       background: rgba(10,10,12,.55);
@@ -47,587 +53,1299 @@
       justify-content:space-between;
       gap:10px;
     }
-    .brand{ display:flex; align-items:center; gap:10px; }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
+    }
     .logo{
       width:40px;height:40px;border-radius:14px;
       display:grid;place-items:center;
-      background:rgba(255,255,255,.10);
-      border:1px solid rgba(255,255,255,.12);
-      font-weight:900;
+      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.12);
+      box-shadow: 0 12px 28px rgba(0,0,0,.25);
+      font-weight: 900;
       user-select:none;
     }
-    .title{ font-weight:900;font-size:16px; }
-    .subtitle{ font-size:12px;color:var(--muted); }
-
-    .btn{
-      height:var(--tap);
-      padding:0 14px;
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.12);
-      background:rgba(255,255,255,.06);
-      color:var(--text);
-      font-weight:800;
-      cursor:pointer;
-      user-select:none;
+    .titles{ min-width:0; }
+    .title{
+      font-weight: 950;
+      font-size: 16px;
+      line-height: 1.1;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
     }
-    .btn:active{ transform: translateY(1px); }
-    .btn-primary{
-      background:rgba(10,132,255,.18);
-      border-color:rgba(10,132,255,.40);
-    }
-    .btn-danger{
-      background:rgba(255,69,58,.16);
-      border-color:rgba(255,69,58,.40);
+    .subtitle{
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
     }
 
+    /* Layout */
     .container{
-      width:min(1100px,92vw);
-      margin:14px auto 40px;
+      width:min(1120px, 92vw);
+      margin: 14px auto 40px;
       display:grid;
-      gap:12px;
+      gap: 12px;
     }
     .card{
-      background:var(--card);
-      border:1px solid var(--line);
-      border-radius:var(--r);
-      padding:var(--pad);
-      box-shadow:var(--shadow);
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--r);
+      padding: var(--pad);
+      box-shadow: var(--shadow);
+      overflow:hidden;
     }
-
-    .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
-    .grid3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
-
-    .field{ display:flex; flex-direction:column; gap:6px; }
-    label{ font-size:12px;color:var(--muted);font-weight:800; }
-
-    input, select{
-      height:var(--tap);
-      border-radius:14px;
-      border:1px solid rgba(255,255,255,.12);
-      background:#111827;
-      color:var(--text);
-      padding:0 12px;
-      outline:none;
-    }
-    input:focus, select:focus{
-      border-color:rgba(10,132,255,.55);
-      box-shadow:0 0 0 3px rgba(10,132,255,.18);
-    }
-
-    /* ===== FIX CONTRASTE SELECT MÓVIL ===== */
-    select{
-      color-scheme: dark;
-      background-color:#111827;
-      color:#f3f4f6;
-    }
-    select option{
-      background-color:#0f1720;
-      color:#f3f4f6;
-    }
-
-    .hint{ font-size:11px;color:var(--muted); }
-
-    .item{
-      background:rgba(255,255,255,.06);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:16px;
-      padding:12px;
-      margin-bottom:10px;
-    }
-    .itemTitle{ font-weight:900;font-size:14px; }
-    .itemMeta{ font-size:12px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap; margin-top:4px; }
-    .money{ font-weight:950;font-size:16px;text-align:right; }
-
-    .rowline{
+    .cardHeader{
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
-      gap:12px;
+      gap:10px;
+      margin-bottom: 10px;
+    }
+    .hTitle{
+      margin:0;
+      font-size: 14px;
+      font-weight: 950;
+      letter-spacing: .2px;
+    }
+    .hSub{
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.25;
+    }
+    .pill{
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      color: var(--muted);
+      white-space:nowrap;
     }
 
+    /* Buttons */
+    .btn{
+      height: var(--tap);
+      padding: 0 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      font-weight: 850;
+      cursor:pointer;
+      user-select:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+    .btn:active{ transform: translateY(1px); }
+    .btn-primary{
+      background: rgba(10,132,255,.18);
+      border-color: rgba(10,132,255,.45);
+    }
+    .btn-danger{
+      background: rgba(255,69,58,.16);
+      border-color: rgba(255,69,58,.40);
+      color: #ffd6d3;
+    }
+    .btn-ghost{
+      background: transparent;
+      border-color: rgba(255,255,255,.10);
+    }
+    .btn-mini{
+      height: 40px;
+      border-radius: 14px;
+      padding: 0 12px;
+      font-weight: 900;
+      font-size: 12px;
+    }
+
+    /* Forms */
+    .grid2{ display:grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .grid3{ display:grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .field{ display:flex; flex-direction:column; gap:6px; }
+    label{ font-size:12px; color: var(--muted); font-weight: 850; }
+
+    input, select{
+      height: var(--tap);
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      padding: 0 12px;
+      outline:none;
+    }
+    input::placeholder{ color: rgba(166,173,187,.65); }
+    input:focus, select:focus{
+      border-color: rgba(10,132,255,.55);
+      box-shadow: 0 0 0 3px rgba(10,132,255,.18);
+    }
+
+    /* FIX CONTRASTE SELECT (móvil) */
+    select{
+      color-scheme: dark;
+      background-color: #111827 !important;
+      color: #f3f4f6 !important;
+    }
+    select option{
+      background-color: #0f1720 !important;
+      color: #f3f4f6 !important;
+    }
+
+    .hint{
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: -2px;
+    }
+
+    /* Budget */
+    .statRow{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 10px;
+      align-items:stretch;
+      margin-top: 10px;
+    }
+    .stat{
+      border-radius: 16px;
+      padding: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+    }
+    .stat .k{
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: .2px;
+    }
+    .stat .v{
+      margin-top: 6px;
+      font-size: 22px;
+      font-weight: 950;
+      font-variant-numeric: tabular-nums;
+    }
+    .stat .s{
+      margin-top: 2px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height:1.25;
+    }
+    .stat.ok{ border-color: rgba(48,209,88,.26); }
+    .stat.warn{ border-color: rgba(255,159,10,.26); }
+    .stat.bad{ border-color: rgba(255,69,58,.30); }
+
+    .rowActions{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      margin-top: 10px;
+    }
+
+    /* Filters */
+    .filters{
+      display:grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr;
+      gap: 10px;
+      margin: 10px 0 12px;
+    }
+
+    /* List cards */
+    .list{ display:grid; gap:10px; }
+    .item{
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.06);
+      padding: 12px;
+      display:grid;
+      gap: 8px;
+    }
+    .itemTop{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap: 10px;
+    }
+    .itemTitle{
+      font-weight: 950;
+      font-size: 14px;
+      letter-spacing: .2px;
+      margin:0;
+    }
+    .itemMeta{
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 4px;
+      display:flex;
+      gap: 8px;
+      flex-wrap:wrap;
+    }
+    .badge{
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      padding: 4px 8px;
+      border-radius: 999px;
+    }
+    .money{
+      text-align:right;
+      font-variant-numeric: tabular-nums;
+    }
+    .money .t{
+      font-weight: 950;
+      font-size: 16px;
+    }
+    .money .s{
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 2px;
+    }
+    .itemNote{
+      color: rgba(243,244,246,.92);
+      font-size: 13px;
+      line-height: 1.35;
+      opacity: .95;
+      border-left: 2px solid rgba(255,255,255,.14);
+      padding-left: 10px;
+    }
+    .miniBtns{
+      display:flex;
+      gap:10px;
+      justify-content:flex-end;
+      flex-wrap:wrap;
+      margin-top: 2px;
+    }
+
+    /* Summary */
     .summaryGrid{
       display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:10px;
-      margin-top:10px;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
     }
     .sumCard{
-      background:rgba(255,255,255,.05);
-      border:1px solid rgba(255,255,255,.12);
-      border-radius:16px;
-      padding:12px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.05);
+      padding: 12px;
     }
-    .sumCard .k{ font-size:12px;color:var(--muted);font-weight:800; }
-    .sumCard .v{ font-size:18px;font-weight:950; font-variant-numeric: tabular-nums; }
+    .sumCard .k{ color: var(--muted); font-size: 12px; font-weight: 900; }
+    .sumCard .v{ margin-top: 6px; font-size: 18px; font-weight: 950; font-variant-numeric: tabular-nums; }
 
-    @media(min-width:820px){
-      .container{ grid-template-columns:1fr 1fr; }
-      .span2{ grid-column:1/-1; }
-      .summaryGrid{ grid-template-columns:repeat(4,1fr); }
+    /* Movements (preview small) */
+    .movWrap{
+      margin-top: 10px;
+      border-top: 1px dashed rgba(255,255,255,.14);
+      padding-top: 10px;
+    }
+    .movRow{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .movLeft{ min-width:0; }
+    .movType{
+      font-weight: 950;
+      font-size: 12px;
+      letter-spacing:.2px;
+    }
+    .movDetail{
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 3px;
+      line-height:1.25;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow: ellipsis;
+      max-width: 68vw;
+    }
+    .movTime{ color: var(--muted); font-size: 11px; margin-top: 2px; }
+    .movRight{ text-align:right; }
+    .movDelta{ font-weight: 950; font-variant-numeric: tabular-nums; }
+    .movSaldo{ color: var(--muted); font-size: 11px; margin-top: 2px; font-variant-numeric: tabular-nums; }
+
+    .foot{
+      color: var(--muted);
+      font-size: 12px;
+      display:flex;
+      justify-content:space-between;
+      gap: 10px;
+      flex-wrap:wrap;
+      padding: 0 4px;
+    }
+
+    @media (min-width: 860px){
+      .container{ grid-template-columns: 1fr 1fr; align-items:start; }
+      .span2{ grid-column: 1 / -1; }
+      .filters{ grid-template-columns: 2fr 1fr 1fr 1fr 1.2fr; }
+      .summaryGrid{ grid-template-columns: repeat(5, 1fr); }
+      .statRow{ grid-template-columns: 1fr 1fr; }
+      .movDetail{ max-width: 420px; }
     }
   </style>
 </head>
 
 <body>
-<header class="topbar">
-  <div class="toprow">
-    <div class="brand">
-      <div class="logo">MB</div>
-      <div>
-        <div class="title">Compras</div>
-        <div class="subtitle">Control de presupuesto + balance</div>
+  <header class="topbar">
+    <div class="toprow">
+      <div class="brand">
+        <div class="logo">MB</div>
+        <div class="titles">
+          <div class="title">Control de Compras</div>
+          <div class="subtitle">Presupuesto + Balance + Excel</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+        <button id="btnExportExcel" class="btn btn-primary" title="Exportar Excel">Excel</button>
+        <button id="btnClearAll" class="btn btn-danger" title="Borrar todo">Borrar</button>
       </div>
     </div>
-    <button class="btn btn-primary" id="btnExportExcel" title="Exportar Excel">Excel</button>
-  </div>
-</header>
+  </header>
 
-<main class="container">
+  <main class="container">
 
-  <!-- PRESUPUESTO -->
-  <section class="card">
-    <div class="rowline">
-      <div>
-        <div style="font-weight:950;">Presupuesto disponible</div>
-        <div class="hint">Se actualiza con compras y fondos agregados</div>
+    <!-- Presupuesto -->
+    <section class="card">
+      <div class="cardHeader">
+        <div>
+          <div class="hTitle">Presupuesto</div>
+          <div class="hSub">Saldo disponible se actualiza con compras, ediciones, eliminaciones y fondos.</div>
+        </div>
+        <div class="pill" id="budgetStatus">—</div>
       </div>
-      <div class="money" id="disponibleTxt">Q0.00</div>
-    </div>
 
-    <div class="grid2" style="margin-top:12px;">
-      <div class="field">
-        <label>Definir presupuesto (Q)</label>
-        <input id="presupuestoInput" type="number" step="0.01" placeholder="Ej: 5000">
-        <div class="hint">Esto ajusta el saldo disponible a ese monto.</div>
+      <div class="statRow">
+        <div class="stat" id="statDisponible">
+          <div class="k">Disponible</div>
+          <div class="v" id="disponibleTxt">Q0.00</div>
+          <div class="s" id="disponibleSub">Define presupuesto o agrega fondos.</div>
+        </div>
+
+        <div class="stat">
+          <div class="k">Gastado (según filtros)</div>
+          <div class="v" id="gastadoFiltradoTxt">Q0.00</div>
+          <div class="s">Solo compras que coinciden con tus filtros actuales.</div>
+        </div>
       </div>
-      <div class="field">
-        <label>Agregar fondos (Q)</label>
-        <input id="agregarInput" type="number" step="0.01" placeholder="Ej: 1000">
-        <div class="hint">Suma dinero al saldo disponible.</div>
-      </div>
-    </div>
 
-    <div class="grid3" style="margin-top:10px;">
-      <button class="btn btn-primary" id="btnSetPresupuesto">Guardar</button>
-      <button class="btn" id="btnAddFondos">Agregar</button>
-      <button class="btn btn-danger" id="btnResetAll">Borrar todo</button>
-    </div>
-
-    <div class="hint" style="margin-top:10px;">
-      Exportación Excel incluye: Balance, Movimientos (con saldos) y Detalle de compras.
-    </div>
-  </section>
-
-  <!-- REGISTRAR -->
-  <section class="card">
-    <div style="font-weight:950;">Registrar compra</div>
-    <div class="hint">Cantidad × Precio = Total (se descuenta del disponible)</div>
-
-    <form id="formCompra" style="margin-top:10px;">
-      <div class="grid2">
+      <div class="grid2" style="margin-top:10px;">
         <div class="field">
-          <label>Fecha</label>
-          <input type="date" id="fecha" required>
+          <label>Definir presupuesto (Q)</label>
+          <input id="presupuestoInput" type="number" min="0" step="0.01" placeholder="Ej: 5000" />
+          <div class="hint">Ajusta el saldo a ese valor exacto (crea movimiento AJUSTE).</div>
         </div>
         <div class="field">
-          <label>Distribución</label>
-          <select id="distribucion" required>
-            <option value="">Seleccionar</option>
+          <label>Agregar fondos (Q)</label>
+          <input id="fondosInput" type="number" min="0" step="0.01" placeholder="Ej: 1000" />
+          <div class="hint">Suma al saldo (crea movimiento FONDOS).</div>
+        </div>
+      </div>
+
+      <div class="rowActions">
+        <button class="btn btn-primary" id="btnSetBudget">Guardar presupuesto</button>
+        <button class="btn" id="btnAddFunds">Agregar fondos</button>
+        <button class="btn btn-ghost" id="btnExportExcel2">Exportar Excel</button>
+      </div>
+
+      <div class="movWrap">
+        <div class="cardHeader" style="margin-bottom:0;">
+          <div>
+            <div class="hTitle">Últimos movimientos</div>
+            <div class="hSub">Cada movimiento guarda delta y saldo resultante.</div>
+          </div>
+          <div class="pill" id="movCountPill">0</div>
+        </div>
+        <div id="movPreview"></div>
+      </div>
+    </section>
+
+    <!-- Registrar / Editar -->
+    <section class="card">
+      <div class="cardHeader">
+        <div>
+          <div class="hTitle">Registrar compra</div>
+          <div class="hSub">Cantidad × Precio = Total (se descuenta del disponible). Editar/Eliminar ajusta saldo automáticamente.</div>
+        </div>
+        <div class="pill" id="editPill">Nuevo</div>
+      </div>
+
+      <form id="formCompra" autocomplete="off">
+        <div class="grid2">
+          <div class="field">
+            <label>Fecha</label>
+            <input type="date" id="fecha" required />
+          </div>
+          <div class="field">
+            <label>Distribución</label>
+            <select id="distribucion" required>
+              <option value="">Seleccionar...</option>
+              <option>Atlantic Plaza</option>
+              <option>Roosevelt</option>
+              <option>Planta</option>
+              <option>Sancris</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:10px;">
+          <label>Producto</label>
+          <input type="text" id="producto" placeholder="Ej: Lechuga, Limón..." required />
+        </div>
+
+        <div class="grid3" style="margin-top:10px;">
+          <div class="field">
+            <label>Cantidad</label>
+            <input type="number" id="cantidad" min="0" step="0.01" placeholder="Ej: 12" required />
+            <div class="hint">Enteros o decimales.</div>
+          </div>
+          <div class="field">
+            <label>Precio unitario (Q)</label>
+            <input type="number" id="precio" min="0" step="0.01" placeholder="Ej: 50" required />
+            <div class="hint">Costo por unidad.</div>
+          </div>
+          <div class="field">
+            <label>Total (Q)</label>
+            <input type="text" id="totalPreview" readonly value="Q0.00" />
+            <div class="hint">Calculado automáticamente.</div>
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:10px;">
+          <label>Nota (opcional)</label>
+          <input type="text" id="nota" placeholder="Proveedor / evento / observación..." />
+        </div>
+
+        <input type="hidden" id="editId" value="" />
+
+        <div class="rowActions">
+          <button class="btn btn-primary" type="submit" id="btnSave">Guardar compra</button>
+          <button class="btn" type="button" id="btnClearForm">Limpiar</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Registros -->
+    <section class="card span2">
+      <div class="cardHeader">
+        <div>
+          <div class="hTitle">Registros</div>
+          <div class="hSub">Búsqueda, filtro por sucursal, rango de fechas, orden. Resumen por sucursal y total.</div>
+        </div>
+        <div class="pill" id="countPill">0</div>
+      </div>
+
+      <div class="filters">
+        <div class="field">
+          <label>Buscar</label>
+          <input type="text" id="q" placeholder="Producto, nota o sucursal..." />
+        </div>
+
+        <div class="field">
+          <label>Sucursal</label>
+          <select id="fDistrib">
+            <option value="">Todas</option>
             <option>Atlantic Plaza</option>
             <option>Roosevelt</option>
             <option>Planta</option>
             <option>Sancris</option>
           </select>
         </div>
-      </div>
 
-      <div class="field" style="margin-top:10px;">
-        <label>Producto</label>
-        <input id="producto" placeholder="Ej: Lechuga, Limón..." required>
-      </div>
-
-      <div class="grid3" style="margin-top:10px;">
         <div class="field">
-          <label>Cantidad</label>
-          <input id="cantidad" type="number" step="0.01" placeholder="Ej: 12" required>
+          <label>Desde</label>
+          <input type="date" id="desde" />
         </div>
+
         <div class="field">
-          <label>Precio unitario (Q)</label>
-          <input id="precio" type="number" step="0.01" placeholder="Ej: 50" required>
+          <label>Hasta</label>
+          <input type="date" id="hasta" />
         </div>
+
         <div class="field">
-          <label>Total (Q)</label>
-          <input id="totalPreview" readonly value="Q0.00">
+          <label>Orden</label>
+          <select id="orden">
+            <option value="fecha_desc">Fecha (nuevo → viejo)</option>
+            <option value="fecha_asc">Fecha (viejo → nuevo)</option>
+            <option value="total_desc">Total (mayor → menor)</option>
+            <option value="total_asc">Total (menor → mayor)</option>
+            <option value="producto_asc">Producto (A → Z)</option>
+          </select>
         </div>
       </div>
 
-      <div class="field" style="margin-top:10px;">
-        <label>Nota (opcional)</label>
-        <input id="nota" placeholder="Proveedor / evento / observación">
+      <div class="rowActions" style="justify-content:space-between;">
+        <div class="hint">Tip: Exportar Excel respeta filtros actuales (y también incluye histórico completo).</div>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button class="btn" id="btnResetFilters" type="button">Reset filtros</button>
+          <button class="btn btn-ghost" id="btnExportExcel3" type="button">Excel</button>
+        </div>
       </div>
 
-      <div class="grid2" style="margin-top:10px;">
-        <button class="btn btn-primary" type="submit">Guardar compra</button>
-        <button class="btn" type="button" id="btnLimpiar">Limpiar</button>
-      </div>
-    </form>
-  </section>
+      <div class="list" id="list"></div>
 
-  <!-- LISTA -->
-  <section class="card span2">
-    <div class="rowline">
-      <div>
-        <div style="font-weight:950;">Compras registradas</div>
-        <div class="hint">Resumen en quetzales por sucursal (solo compras)</div>
-      </div>
-      <div class="money" id="gastadoTxt">Q0.00</div>
-    </div>
+      <div class="summaryGrid" id="summaryGrid"></div>
 
-    <div style="margin-top:10px;" id="list"></div>
-    <div class="summaryGrid" id="summaryGrid"></div>
-  </section>
+      <footer class="foot" style="margin-top:10px;">
+        <div>Offline + GitHub Pages ✅</div>
+        <div>Moneda: Quetzales (Q)</div>
+      </footer>
+    </section>
 
-</main>
+  </main>
 
-<script>
-  // =========================
-  // Storage Keys
-  // =========================
-  const KEYS = {
-    compras: "mb_compras_excel_v1",       // array
-    saldo: "mb_saldo_actual_v1",         // number
-    movimientos: "mb_movimientos_v1"     // array (balance log)
-  };
+  <script>
+    /* =========================================================
+       Control de Compras — 1 archivo
+       - Presupuesto (saldo disponible)
+       - Movimientos (delta y saldo resultante)
+       - Compras CRUD (crear/editar/eliminar) ajustando saldo
+       - Filtros + búsqueda + orden + resumen por sucursal
+       - Exportación Excel (XLS HTML) con Balance + Movimientos + Detalle
+    ========================================================= */
 
-  const $ = (id) => document.getElementById(id);
+    const STORE = {
+      compras: "mb_compras_full_v1",
+      saldo: "mb_saldo_full_v1",
+      movs: "mb_movs_full_v1"
+    };
 
-  // Inputs
-  const f = $("formCompra");
-  const fecha = $("fecha"), dist = $("distribucion"), prod = $("producto");
-  const cant = $("cantidad"), precio = $("precio"), nota = $("nota"), totPrev = $("totalPreview");
+    const SUCURSALES = ["Atlantic Plaza", "Roosevelt", "Planta", "Sancris"];
 
-  // Presupuesto
-  const presupuestoInput = $("presupuestoInput");
-  const agregarInput = $("agregarInput");
+    const $ = (id) => document.getElementById(id);
 
-  // UI
-  const dispTxt = $("disponibleTxt");
-  const gastadoTxt = $("gastadoTxt");
-  const list = $("list");
-  const sumGrid = $("summaryGrid");
+    // Form compra
+    const form = $("formCompra");
+    const inpFecha = $("fecha");
+    const inpDistrib = $("distribucion");
+    const inpProducto = $("producto");
+    const inpCantidad = $("cantidad");
+    const inpPrecio = $("precio");
+    const inpNota = $("nota");
+    const totalPreview = $("totalPreview");
+    const editId = $("editId");
+    const editPill = $("editPill");
+    const btnSave = $("btnSave");
 
-  // Helpers
-  function n(v){ const x = Number(v); return Number.isFinite(x) ? x : 0; }
-  function money(v){ return "Q" + n(v).toFixed(2); }
-  function todayISO(){
-    const d = new Date();
-    const tzOffset = d.getTimezoneOffset()*60000;
-    return new Date(d - tzOffset).toISOString().slice(0,10);
-  }
-  function nowISO(){
-    const d = new Date();
-    const tzOffset = d.getTimezoneOffset()*60000;
-    return new Date(d - tzOffset).toISOString().replace("T"," ").slice(0,19);
-  }
-  function uid(){
-    return "X" + Date.now().toString(36) + Math.random().toString(36).slice(2,7).toUpperCase();
-  }
-  function esc(s){
-    return (s ?? "").toString()
-      .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;").replaceAll("'","&#039;");
-  }
+    // Presupuesto
+    const presupuestoInput = $("presupuestoInput");
+    const fondosInput = $("fondosInput");
+    const disponibleTxt = $("disponibleTxt");
+    const gastadoFiltradoTxt = $("gastadoFiltradoTxt");
+    const budgetStatus = $("budgetStatus");
+    const statDisponible = $("statDisponible");
+    const disponibleSub = $("disponibleSub");
 
-  // Storage
-  function loadCompras(){ try{ return JSON.parse(localStorage.getItem(KEYS.compras) || "[]") } catch { return [] } }
-  function saveCompras(a){ localStorage.setItem(KEYS.compras, JSON.stringify(a)); }
+    // Movimientos preview
+    const movPreview = $("movPreview");
+    const movCountPill = $("movCountPill");
 
-  function getSaldo(){ return n(localStorage.getItem(KEYS.saldo)); }
-  function setSaldo(v){ localStorage.setItem(KEYS.saldo, String(n(v))); }
+    // Lista + filtros
+    const list = $("list");
+    const summaryGrid = $("summaryGrid");
+    const countPill = $("countPill");
 
-  function loadMovs(){ try{ return JSON.parse(localStorage.getItem(KEYS.movimientos) || "[]") } catch { return [] } }
-  function saveMovs(a){ localStorage.setItem(KEYS.movimientos, JSON.stringify(a)); }
+    const q = $("q");
+    const fDistrib = $("fDistrib");
+    const desde = $("desde");
+    const hasta = $("hasta");
+    const orden = $("orden");
 
-  // Movimientos de balance
-  function addMovimiento({tipo, detalle, delta}){
-    const before = getSaldo();
-    const after = before + n(delta);
-    setSaldo(after);
+    // Buttons
+    $("btnClearForm").addEventListener("click", clearForm);
+    $("btnResetFilters").addEventListener("click", resetFilters);
+    $("btnSetBudget").addEventListener("click", setBudget);
+    $("btnAddFunds").addEventListener("click", addFunds);
+    $("btnClearAll").addEventListener("click", clearAll);
 
-    const movs = loadMovs();
-    movs.push({
-      id: uid(),
-      fechaHora: nowISO(),
-      tipo,
-      detalle: detalle || "",
-      delta: n(delta),
-      saldo: after
-    });
-    saveMovs(movs);
-  }
-
-  // Total preview
-  function updateTotal(){
-    const t = n(cant.value) * n(precio.value);
-    totPrev.value = money(t);
-  }
-  cant.addEventListener("input", updateTotal);
-  precio.addEventListener("input", updateTotal);
-
-  // Acciones presupuesto
-  $("btnSetPresupuesto").addEventListener("click", () => {
-    const newVal = n(presupuestoInput.value);
-    if(newVal <= 0){ alert("Ingresa un presupuesto válido mayor a 0."); return; }
-
-    const current = getSaldo();
-    const delta = newVal - current; // ajusta saldo al valor exacto
-    addMovimiento({ tipo:"AJUSTE", detalle:"Ajuste de presupuesto", delta });
-
-    presupuestoInput.value = "";
-    render();
-  });
-
-  $("btnAddFondos").addEventListener("click", () => {
-    const add = n(agregarInput.value);
-    if(add <= 0){ alert("Ingresa un monto válido para agregar."); return; }
-
-    addMovimiento({ tipo:"FONDOS", detalle:"Fondos agregados", delta: +add });
-
-    agregarInput.value = "";
-    render();
-  });
-
-  $("btnResetAll").addEventListener("click", () => {
-    const ok = confirm("Esto borrará compras, saldo y movimientos en este dispositivo. ¿Continuar?");
-    if(!ok) return;
-    localStorage.removeItem(KEYS.compras);
-    localStorage.removeItem(KEYS.saldo);
-    localStorage.removeItem(KEYS.movimientos);
-    f.reset();
-    fecha.value = todayISO();
-    updateTotal();
-    render();
-  });
-
-  $("btnLimpiar").addEventListener("click", () => {
-    f.reset();
-    fecha.value = todayISO();
-    updateTotal();
-    prod.focus();
-  });
-
-  // Guardar compra
-  f.addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    const t = n(cant.value) * n(precio.value);
-    if(t <= 0){ alert("Total inválido."); return; }
-
-    // Movimiento de compra (resta)
-    addMovimiento({
-      tipo: "COMPRA",
-      detalle: `${prod.value} — ${dist.value}`,
-      delta: -t
+    ["btnExportExcel","btnExportExcel2","btnExportExcel3"].forEach(id=>{
+      $(id).addEventListener("click", exportExcel);
     });
 
-    const a = loadCompras();
-    a.push({
-      id: uid(),
-      fecha: fecha.value,
-      dist: dist.value,
-      prod: prod.value,
-      cant: n(cant.value),
-      precio: n(precio.value),
-      total: t,
-      nota: (nota.value || "").trim()
-    });
-    saveCompras(a);
+    [q, fDistrib, desde, hasta, orden].forEach(el => el.addEventListener("input", render));
+    [inpCantidad, inpPrecio].forEach(el => el.addEventListener("input", updateTotalPreview));
 
-    f.reset();
-    fecha.value = todayISO();
-    updateTotal();
-    render();
-  });
-
-  // Resumen por sucursal + lista
-  function render(){
-    const saldo = getSaldo();
-    dispTxt.textContent = money(saldo);
-
-    const compras = loadCompras();
-    if(compras.length === 0){
-      list.innerHTML = `<div class="item"><div class="itemTitle">No hay compras aún</div><div class="itemMeta">Registra tu primera compra arriba.</div></div>`;
-      sumGrid.innerHTML = "";
-      gastadoTxt.textContent = money(0);
-      return;
+    // Helpers
+    function num(v){
+      const n = Number(v);
+      return Number.isFinite(n) ? n : 0;
+    }
+    function money(n){
+      return "Q" + num(n).toFixed(2);
+    }
+    function esc(str){
+      return (str ?? "").toString()
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+    }
+    function uid(){
+      return "ID" + Date.now().toString(36) + Math.random().toString(36).slice(2,7).toUpperCase();
+    }
+    function todayISO(){
+      const d = new Date();
+      const tzOffset = d.getTimezoneOffset() * 60000;
+      return new Date(d - tzOffset).toISOString().slice(0,10);
+    }
+    function nowISO(){
+      const d = new Date();
+      const tzOffset = d.getTimezoneOffset() * 60000;
+      return new Date(d - tzOffset).toISOString().replace("T"," ").slice(0,19);
     }
 
-    let totalGastado = 0;
-    const sums = {};
-    const order = ["Atlantic Plaza","Roosevelt","Planta","Sancris"];
+    // Storage (Compras)
+    function loadCompras(){
+      try{
+        const raw = localStorage.getItem(STORE.compras);
+        const arr = raw ? JSON.parse(raw) : [];
+        return Array.isArray(arr) ? arr : [];
+      }catch{ return []; }
+    }
+    function saveCompras(arr){
+      localStorage.setItem(STORE.compras, JSON.stringify(arr));
+    }
 
-    list.innerHTML = "";
-    compras.slice().reverse().forEach(r=>{
-      totalGastado += n(r.total);
-      sums[r.dist] = (sums[r.dist] || 0) + n(r.total);
+    // Storage (Saldo)
+    function getSaldo(){
+      return num(localStorage.getItem(STORE.saldo));
+    }
+    function setSaldo(v){
+      localStorage.setItem(STORE.saldo, String(num(v)));
+    }
 
-      list.innerHTML += `
-        <div class="item">
-          <div class="rowline">
-            <div>
-              <div class="itemTitle">${esc(r.prod)}</div>
-              <div class="itemMeta">
-                <span>${esc(r.fecha)}</span> •
-                <span>${esc(r.dist)}</span> •
-                <span>Cant: <b>${n(r.cant).toFixed(2).replace(/\.00$/,"")}</b></span> •
-                <span>P/U: <b>${money(r.precio)}</b></span>
-              </div>
-              ${r.nota ? `<div class="hint" style="margin-top:6px;">${esc(r.nota)}</div>` : ``}
+    // Storage (Movimientos)
+    function loadMovs(){
+      try{
+        const raw = localStorage.getItem(STORE.movs);
+        const arr = raw ? JSON.parse(raw) : [];
+        return Array.isArray(arr) ? arr : [];
+      }catch{ return []; }
+    }
+    function saveMovs(arr){
+      localStorage.setItem(STORE.movs, JSON.stringify(arr));
+    }
+
+    // Crear movimiento y actualizar saldo
+    function addMovement({ tipo, detalle, delta, refId }){
+      const before = getSaldo();
+      const after = before + num(delta);
+      setSaldo(after);
+
+      const movs = loadMovs();
+      movs.push({
+        id: uid(),
+        fechaHora: nowISO(),
+        tipo: (tipo || "MOV").toUpperCase(),
+        detalle: detalle || "",
+        delta: num(delta),
+        saldo: after,
+        refId: refId || ""
+      });
+      saveMovs(movs);
+      return after;
+    }
+
+    // Calcular total compra
+    function calcTotal(qty, price){
+      return num(qty) * num(price);
+    }
+
+    function updateTotalPreview(){
+      const t = calcTotal(inpCantidad.value, inpPrecio.value);
+      totalPreview.value = money(t);
+    }
+
+    // Form reset
+    function clearForm(){
+      editId.value = "";
+      editPill.textContent = "Nuevo";
+      btnSave.textContent = "Guardar compra";
+      inpFecha.value = todayISO();
+      inpDistrib.value = "";
+      inpProducto.value = "";
+      inpCantidad.value = "";
+      inpPrecio.value = "";
+      inpNota.value = "";
+      updateTotalPreview();
+      inpProducto.focus();
+    }
+
+    // Filters
+    function resetFilters(){
+      q.value = "";
+      fDistrib.value = "";
+      desde.value = "";
+      hasta.value = "";
+      orden.value = "fecha_desc";
+      render();
+    }
+
+    function applyFilters(items){
+      let out = [...items];
+
+      const qq = (q.value || "").trim().toLowerCase();
+      if(qq){
+        out = out.filter(r =>
+          (r.producto || "").toLowerCase().includes(qq) ||
+          (r.nota || "").toLowerCase().includes(qq) ||
+          (r.distribucion || "").toLowerCase().includes(qq)
+        );
+      }
+
+      const fd = (fDistrib.value || "").trim();
+      if(fd){
+        out = out.filter(r => r.distribucion === fd);
+      }
+
+      const d1 = desde.value;
+      const d2 = hasta.value;
+      if(d1) out = out.filter(r => (r.fecha || "") >= d1);
+      if(d2) out = out.filter(r => (r.fecha || "") <= d2);
+
+      const ord = orden.value;
+      out.sort((a,b)=>{
+        if(ord === "fecha_desc") return (b.fecha||"").localeCompare(a.fecha||"");
+        if(ord === "fecha_asc")  return (a.fecha||"").localeCompare(b.fecha||"");
+        if(ord === "total_desc") return num(b.total) - num(a.total);
+        if(ord === "total_asc")  return num(a.total) - num(b.total);
+        if(ord === "producto_asc") return (a.producto||"").localeCompare(b.producto||"");
+        return 0;
+      });
+
+      return out;
+    }
+
+    function sumTotals(items){
+      return items.reduce((acc,r)=>acc+num(r.total),0);
+    }
+
+    // Budget status UI
+    function renderBudget(){
+      const disp = getSaldo();
+      disponibleTxt.textContent = money(disp);
+
+      let status = "Sin presupuesto";
+      if(localStorage.getItem(STORE.saldo) !== null){
+        status = disp <= 0 ? "Sin saldo" : (disp < 200 ? "Bajo" : "OK");
+      }
+
+      budgetStatus.textContent = status;
+
+      statDisponible.classList.remove("ok","warn","bad");
+      if(localStorage.getItem(STORE.saldo) === null){
+        // no status styling
+      } else if(disp <= 0){
+        statDisponible.classList.add("bad");
+      } else if(disp < 200){
+        statDisponible.classList.add("warn");
+      } else {
+        statDisponible.classList.add("ok");
+      }
+
+      if(localStorage.getItem(STORE.saldo) === null){
+        disponibleSub.textContent = "Define presupuesto o agrega fondos.";
+      } else {
+        disponibleSub.textContent = "Se ajusta con compras, ediciones, eliminaciones y fondos.";
+      }
+    }
+
+    // Movements preview
+    function renderMovementsPreview(){
+      const movs = loadMovs();
+      movCountPill.textContent = `${movs.length}`;
+
+      const last = movs.slice(-5).reverse();
+      if(last.length === 0){
+        movPreview.innerHTML = `<div class="hint" style="margin-top:8px;">Aún no hay movimientos.</div>`;
+        return;
+      }
+
+      movPreview.innerHTML = last.map(m=>{
+        const d = num(m.delta);
+        const sign = d > 0 ? "+" : "";
+        return `
+          <div class="movRow">
+            <div class="movLeft">
+              <div class="movType">${esc(m.tipo)}</div>
+              <div class="movDetail" title="${esc(m.detalle)}">${esc(m.detalle)}</div>
+              <div class="movTime">${esc(m.fechaHora)}</div>
             </div>
-            <div class="money">${money(r.total)}</div>
+            <div class="movRight">
+              <div class="movDelta">${sign}${money(d)}</div>
+              <div class="movSaldo">Saldo: ${money(m.saldo)}</div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // Summary by branch
+    function renderSummary(filtered){
+      const sums = Object.fromEntries(SUCURSALES.map(s=>[s,0]));
+      filtered.forEach(r=>{
+        if(sums[r.distribucion] == null) sums[r.distribucion] = 0;
+        sums[r.distribucion] += num(r.total);
+      });
+
+      const total = SUCURSALES.reduce((a,s)=>a+num(sums[s]),0);
+
+      summaryGrid.innerHTML = [
+        ...SUCURSALES.map(s=>`
+          <div class="sumCard">
+            <div class="k">${esc(s)}</div>
+            <div class="v">${money(sums[s]||0)}</div>
+          </div>
+        `),
+        `
+          <div class="sumCard" style="border-color: rgba(10,132,255,.35);">
+            <div class="k">TOTAL (filtrado)</div>
+            <div class="v">${money(total)}</div>
+          </div>
+        `
+      ].join("");
+    }
+
+    // Start editing
+    function startEdit(id){
+      const compras = loadCompras();
+      const row = compras.find(x => x.id === id);
+      if(!row) return;
+
+      editId.value = row.id;
+      editPill.textContent = "Editando";
+      btnSave.textContent = "Actualizar compra";
+
+      inpFecha.value = row.fecha || todayISO();
+      inpDistrib.value = row.distribucion || "";
+      inpProducto.value = row.producto || "";
+      inpCantidad.value = row.cantidad ?? "";
+      inpPrecio.value = row.precio ?? "";
+      inpNota.value = row.nota || "";
+
+      updateTotalPreview();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      inpProducto.focus();
+    }
+
+    // Delete purchase (refund)
+    function deleteCompra(id){
+      const compras = loadCompras();
+      const row = compras.find(x => x.id === id);
+      if(!row) return;
+
+      const ok = confirm(`Eliminar compra?\n\n${row.fecha} — ${row.distribucion}\n${row.producto}\nTotal: ${money(row.total)}`);
+      if(!ok) return;
+
+      // Refund to saldo
+      addMovement({
+        tipo: "ELIMINACION",
+        detalle: `Eliminada: ${row.producto} — ${row.distribucion}`,
+        delta: +num(row.total),
+        refId: row.id
+      });
+
+      const newArr = compras.filter(x => x.id !== id);
+      saveCompras(newArr);
+
+      if(editId.value === id) clearForm();
+      render();
+    }
+
+    // Budget actions
+    function setBudget(){
+      const v = num(presupuestoInput.value);
+      if(v <= 0){
+        alert("Ingresa un presupuesto válido mayor a 0.");
+        return;
+      }
+
+      const current = getSaldo();
+      const delta = v - current; // ajusta saldo al valor exacto
+
+      addMovement({
+        tipo: "AJUSTE",
+        detalle: "Ajuste de presupuesto",
+        delta
+      });
+
+      presupuestoInput.value = "";
+      render();
+    }
+
+    function addFunds(){
+      const v = num(fondosInput.value);
+      if(v <= 0){
+        alert("Ingresa un monto válido para agregar.");
+        return;
+      }
+
+      addMovement({
+        tipo: "FONDOS",
+        detalle: "Fondos agregados",
+        delta: +v
+      });
+
+      fondosInput.value = "";
+      render();
+    }
+
+    function clearAll(){
+      const ok = confirm("Esto borrará TODO (compras, saldo y movimientos) en este dispositivo. ¿Continuar?");
+      if(!ok) return;
+      localStorage.removeItem(STORE.compras);
+      localStorage.removeItem(STORE.saldo);
+      localStorage.removeItem(STORE.movs);
+      clearForm();
+      render();
+    }
+
+    // Form submit: create or edit
+    form.addEventListener("submit", (e)=>{
+      e.preventDefault();
+
+      const fecha = inpFecha.value;
+      const distribucion = (inpDistrib.value || "").trim();
+      const producto = (inpProducto.value || "").trim();
+      const cantidad = num(inpCantidad.value);
+      const precio = num(inpPrecio.value);
+      const nota = (inpNota.value || "").trim();
+
+      if(!fecha || !distribucion || !producto){
+        alert("Completa fecha, distribución y producto.");
+        return;
+      }
+      if(cantidad <= 0){
+        alert("La cantidad debe ser mayor a 0.");
+        return;
+      }
+      if(precio < 0){
+        alert("El precio unitario no puede ser negativo.");
+        return;
+      }
+
+      const total = calcTotal(cantidad, precio);
+
+      const compras = loadCompras();
+
+      // EDIT
+      if(editId.value){
+        const idx = compras.findIndex(x => x.id === editId.value);
+        if(idx < 0){
+          // si por algún motivo no existe
+          alert("No se encontró la compra para editar.");
+          clearForm();
+          render();
+          return;
+        }
+
+        const old = compras[idx];
+        const oldTotal = num(old.total);
+        const deltaSaldo = oldTotal - total; // si total nuevo es mayor => delta negativo (resta más)
+
+        addMovement({
+          tipo: "EDICION",
+          detalle: `Editada: ${old.producto} → ${producto} (${old.distribucion} → ${distribucion})`,
+          delta: +deltaSaldo,
+          refId: old.id
+        });
+
+        compras[idx] = {
+          ...old,
+          fecha,
+          distribucion,
+          producto,
+          cantidad,
+          precio,
+          total,
+          nota,
+          updatedAt: nowISO()
+        };
+
+        saveCompras(compras);
+        clearForm();
+        render();
+        return;
+      }
+
+      // NEW
+      // Si ya hay saldo definido, y no alcanza, preguntamos
+      if(localStorage.getItem(STORE.saldo) !== null){
+        const disp = getSaldo();
+        if(disp < total){
+          const ok = confirm(`No alcanza el saldo.\nDisponible: ${money(disp)}\nCompra: ${money(total)}\n\n¿Guardar de todos modos?`);
+          if(!ok) return;
+        }
+      }
+
+      const newRow = {
+        id: uid(),
+        fecha,
+        distribucion,
+        producto,
+        cantidad,
+        precio,
+        total,
+        nota,
+        createdAt: nowISO(),
+        updatedAt: nowISO()
+      };
+
+      // movimiento compra (resta)
+      addMovement({
+        tipo: "COMPRA",
+        detalle: `${producto} — ${distribucion}`,
+        delta: -total,
+        refId: newRow.id
+      });
+
+      compras.push(newRow);
+      saveCompras(compras);
+
+      clearForm();
+      render();
+    });
+
+    // Render list
+    function renderList(filtered){
+      countPill.textContent = `${filtered.length} registro${filtered.length===1?"":"s"}`;
+
+      if(filtered.length === 0){
+        list.innerHTML = `
+          <div class="item">
+            <div class="itemTitle">No hay registros</div>
+            <div class="itemMeta">
+              <span class="badge">Prueba quitando filtros</span>
+              <span class="badge">o registra una compra arriba</span>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = filtered.map(r=>`
+        <div class="item">
+          <div class="itemTop">
+            <div>
+              <div class="itemTitle">${esc(r.producto || "")}</div>
+              <div class="itemMeta">
+                <span class="badge">${esc(r.fecha || "")}</span>
+                <span class="badge">${esc(r.distribucion || "")}</span>
+                <span class="badge">Cant: <b>${num(r.cantidad).toFixed(2).replace(/\.00$/,"")}</b></span>
+                <span class="badge">P/U: <b>${money(r.precio)}</b></span>
+              </div>
+            </div>
+
+            <div class="money">
+              <div class="t">${money(r.total)}</div>
+              <div class="s">Total</div>
+            </div>
+          </div>
+
+          ${r.nota ? `<div class="itemNote">${esc(r.nota)}</div>` : ""}
+
+          <div class="miniBtns">
+            <button class="btn btn-mini" data-act="edit" data-id="${esc(r.id)}">Editar</button>
+            <button class="btn btn-mini btn-danger" data-act="del" data-id="${esc(r.id)}">Eliminar</button>
           </div>
         </div>
-      `;
-    });
+      `).join("");
 
-    gastadoTxt.textContent = money(totalGastado);
+      list.querySelectorAll("button[data-act]").forEach(btn=>{
+        btn.addEventListener("click", ()=>{
+          const id = btn.getAttribute("data-id");
+          const act = btn.getAttribute("data-act");
+          if(act === "edit") startEdit(id);
+          if(act === "del") deleteCompra(id);
+        });
+      });
+    }
 
-    // Summary cards
-    sumGrid.innerHTML = "";
-    order.forEach(k=>{
-      if(sums[k] == null) sums[k] = 0;
-      sumGrid.innerHTML += `
-        <div class="sumCard">
-          <div class="k">${esc(k)}</div>
-          <div class="v">${money(sums[k])}</div>
-        </div>
-      `;
-    });
+    // Main render
+    function render(){
+      const compras = loadCompras();
+      const filtered = applyFilters(compras);
 
-    sumGrid.innerHTML += `
-      <div class="sumCard" style="border-color: rgba(10,132,255,.35);">
-        <div class="k">TOTAL GASTADO</div>
-        <div class="v">${money(totalGastado)}</div>
-      </div>
-    `;
-  }
+      const gastoFiltrado = sumTotals(filtered);
+      gastadoFiltradoTxt.textContent = money(gastoFiltrado);
 
-  // =========================
-  // EXPORTAR A EXCEL (.XLS HTML)
-  // =========================
-  function exportExcel(){
-    const compras = loadCompras();
-    const movs = loadMovs();
-    const saldo = getSaldo();
+      renderBudget();
+      renderMovementsPreview();
+      renderList(filtered);
+      renderSummary(filtered);
+    }
 
-    // Balance global:
-    // fondos netos = suma de deltas positivos; gastos = suma de deltas negativos (en positivo)
-    let fondos = 0, gastos = 0;
-    movs.forEach(m=>{
-      const d = n(m.delta);
-      if(d > 0) fondos += d;
-      if(d < 0) gastos += Math.abs(d);
-    });
+    // Export Excel (XLS HTML)
+    function exportExcel(){
+      const compras = loadCompras();
+      const movs = loadMovs();
+      const saldo = getSaldo();
 
-    const today = todayISO();
+      const filtered = applyFilters(compras);
+      const gastoFiltrado = sumTotals(filtered);
 
-    // Construimos un HTML que Excel abre como hoja
-    const html = `
-      <html>
-      <head>
-        <meta charset="utf-8" />
-        <style>
-          body{ font-family: Calibri, Arial; font-size: 11pt; }
-          h1{ font-size: 16pt; margin: 0 0 8px; }
-          h2{ font-size: 13pt; margin: 14px 0 6px; }
-          table{ border-collapse: collapse; width: 100%; }
-          th, td{ border: 1px solid #d0d0d0; padding: 6px 8px; }
-          th{ background:#f2f2f2; font-weight:700; }
-          .num{ text-align:right; }
-          .muted{ color:#666; }
-          .box{ border:1px solid #d0d0d0; padding:10px; margin: 6px 0 10px; }
-        </style>
-      </head>
-      <body>
-        <h1>Reporte de Compras y Balance</h1>
-        <div class="muted">Generado: ${esc(today)} | Moneda: Quetzales (Q)</div>
+      let fondos = 0, gastos = 0;
+      movs.forEach(m=>{
+        const d = num(m.delta);
+        if(d > 0) fondos += d;
+        if(d < 0) gastos += Math.abs(d);
+      });
 
-        <h2>Balance</h2>
-        <div class="box">
+      const today = todayISO();
+
+      const filtrosTxt = [
+        q.value ? `Buscar="${q.value}"` : "",
+        fDistrib.value ? `Sucursal="${fDistrib.value}"` : "",
+        desde.value ? `Desde="${desde.value}"` : "",
+        hasta.value ? `Hasta="${hasta.value}"` : "",
+        `Orden="${orden.value}"`
+      ].filter(Boolean).join(" | ") || "Sin filtros";
+
+      const html = `
+        <html>
+        <head>
+          <meta charset="utf-8" />
+          <style>
+            body{ font-family: Calibri, Arial; font-size: 11pt; }
+            h1{ font-size: 16pt; margin: 0 0 8px; }
+            h2{ font-size: 13pt; margin: 14px 0 6px; }
+            .muted{ color:#666; }
+            .box{ border:1px solid #d0d0d0; padding:10px; margin: 6px 0 10px; }
+            table{ border-collapse: collapse; width: 100%; }
+            th, td{ border: 1px solid #d0d0d0; padding: 6px 8px; }
+            th{ background:#f2f2f2; font-weight:700; }
+            .num{ text-align:right; }
+          </style>
+        </head>
+        <body>
+          <h1>Reporte de Compras y Balance</h1>
+          <div class="muted">Generado: ${esc(today)} | Moneda: Quetzales (Q)</div>
+
+          <h2>Balance global</h2>
+          <div class="box">
+            <table>
+              <tr><th>Concepto</th><th class="num">Monto</th></tr>
+              <tr><td>Fondos / Ajustes (+)</td><td class="num">${money(fondos)}</td></tr>
+              <tr><td>Gastos por compras (-)</td><td class="num">${money(gastos)}</td></tr>
+              <tr><td><b>Saldo actual</b></td><td class="num"><b>${money(saldo)}</b></td></tr>
+            </table>
+          </div>
+
+          <h2>Balance según filtros</h2>
+          <div class="box">
+            <div class="muted">Filtros: ${esc(filtrosTxt)}</div>
+            <table style="margin-top:8px;">
+              <tr><th>Concepto</th><th class="num">Monto</th></tr>
+              <tr><td>Gasto (compras filtradas)</td><td class="num">${money(gastoFiltrado)}</td></tr>
+              <tr><td>Cantidad de registros</td><td class="num">${filtered.length}</td></tr>
+            </table>
+          </div>
+
+          <h2>Movimientos de saldo</h2>
           <table>
-            <tr><th>Concepto</th><th class="num">Monto</th></tr>
-            <tr><td>Fondos / Ajustes (+)</td><td class="num">${money(fondos)}</td></tr>
-            <tr><td>Gastos por compras (-)</td><td class="num">${money(gastos)}</td></tr>
-            <tr><td><b>Saldo actual</b></td><td class="num"><b>${money(saldo)}</b></td></tr>
+            <tr>
+              <th>Fecha/Hora</th>
+              <th>Tipo</th>
+              <th>Detalle</th>
+              <th class="num">Delta</th>
+              <th class="num">Saldo</th>
+              <th>Ref</th>
+            </tr>
+            ${movs.map(m=>`
+              <tr>
+                <td>${esc(m.fechaHora||"")}</td>
+                <td>${esc(m.tipo||"")}</td>
+                <td>${esc(m.detalle||"")}</td>
+                <td class="num">${money(m.delta)}</td>
+                <td class="num">${money(m.saldo)}</td>
+                <td>${esc(m.refId||"")}</td>
+              </tr>
+            `).join("") || `<tr><td colspan="6" class="muted">Sin movimientos.</td></tr>`}
           </table>
-        </div>
 
-        <h2>Movimientos de saldo</h2>
-        <table>
-          <tr>
-            <th>Fecha/Hora</th>
-            <th>Tipo</th>
-            <th>Detalle</th>
-            <th class="num">Delta</th>
-            <th class="num">Saldo</th>
-          </tr>
-          ${movs.map(m=>`
+          <h2>Detalle de compras (FILTRADAS)</h2>
+          <div class="muted">Filtros: ${esc(filtrosTxt)}</div>
+          <table style="margin-top:6px;">
             <tr>
-              <td>${esc(m.fechaHora||"")}</td>
-              <td>${esc(m.tipo||"")}</td>
-              <td>${esc(m.detalle||"")}</td>
-              <td class="num">${money(m.delta)}</td>
-              <td class="num">${money(m.saldo)}</td>
+              <th>Fecha</th>
+              <th>Distribución</th>
+              <th>Producto</th>
+              <th class="num">Cantidad</th>
+              <th class="num">Precio Unitario</th>
+              <th class="num">Total</th>
+              <th>Nota</th>
+              <th>ID</th>
             </tr>
-          `).join("") || `<tr><td colspan="5" class="muted">Sin movimientos.</td></tr>`}
-        </table>
+            ${filtered.map(r=>`
+              <tr>
+                <td>${esc(r.fecha||"")}</td>
+                <td>${esc(r.distribucion||"")}</td>
+                <td>${esc(r.producto||"")}</td>
+                <td class="num">${num(r.cantidad).toFixed(2).replace(/\.00$/,"")}</td>
+                <td class="num">${money(r.precio)}</td>
+                <td class="num">${money(r.total)}</td>
+                <td>${esc(r.nota||"")}</td>
+                <td>${esc(r.id||"")}</td>
+              </tr>
+            `).join("") || `<tr><td colspan="8" class="muted">Sin compras filtradas.</td></tr>`}
+          </table>
 
-        <h2>Detalle de compras</h2>
-        <table>
-          <tr>
-            <th>Fecha</th>
-            <th>Distribución</th>
-            <th>Producto</th>
-            <th class="num">Cantidad</th>
-            <th class="num">Precio Unitario</th>
-            <th class="num">Total</th>
-            <th>Nota</th>
-          </tr>
-          ${compras.map(r=>`
+          <h2>Detalle de compras (HISTÓRICO COMPLETO)</h2>
+          <table>
             <tr>
-              <td>${esc(r.fecha||"")}</td>
-              <td>${esc(r.dist||"")}</td>
-              <td>${esc(r.prod||"")}</td>
-              <td class="num">${n(r.cant).toFixed(2).replace(/\.00$/,"")}</td>
-              <td class="num">${money(r.precio)}</td>
-              <td class="num">${money(r.total)}</td>
-              <td>${esc(r.nota||"")}</td>
+              <th>Fecha</th>
+              <th>Distribución</th>
+              <th>Producto</th>
+              <th class="num">Cantidad</th>
+              <th class="num">Precio Unitario</th>
+              <th class="num">Total</th>
+              <th>Nota</th>
+              <th>ID</th>
             </tr>
-          `).join("") || `<tr><td colspan="7" class="muted">Sin compras.</td></tr>`}
-        </table>
-      </body>
-      </html>
-    `;
+            ${compras.map(r=>`
+              <tr>
+                <td>${esc(r.fecha||"")}</td>
+                <td>${esc(r.distribucion||"")}</td>
+                <td>${esc(r.producto||"")}</td>
+                <td class="num">${num(r.cantidad).toFixed(2).replace(/\.00$/,"")}</td>
+                <td class="num">${money(r.precio)}</td>
+                <td class="num">${money(r.total)}</td>
+                <td>${esc(r.nota||"")}</td>
+                <td>${esc(r.id||"")}</td>
+              </tr>
+            `).join("") || `<tr><td colspan="8" class="muted">Sin compras.</td></tr>`}
+          </table>
+        </body>
+        </html>
+      `;
 
-    const blob = new Blob([html], { type: "application/vnd.ms-excel;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
+      const blob = new Blob([html], { type: "application/vnd.ms-excel;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `reporte_compras_${today}.xls`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
 
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `reporte_compras_${today}.xls`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-
-    URL.revokeObjectURL(url);
-  }
-
-  $("btnExportExcel").addEventListener("click", exportExcel);
-
-  // Init
-  fecha.value = todayISO();
-  updateTotal();
-  render();
-</script>
+    // Init
+    (function init(){
+      inpFecha.value = todayISO();
+      updateTotalPreview();
+      render();
+    })();
+  </script>
 </body>
 </html>
