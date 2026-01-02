@@ -15,15 +15,12 @@
       --muted:#a6adbb;
       --accent:#0a84ff;
       --danger:#ff453a;
-      --ok:#30d158;
       --shadow: 0 18px 60px rgba(0,0,0,.40);
       --r: 18px;
       --pad: 16px;
       --tap: 46px;
     }
-
     *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
-
     body{
       margin:0;
       font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial;
@@ -35,7 +32,6 @@
       padding-bottom: calc(env(safe-area-inset-bottom) + 20px);
     }
 
-    /* ================= TOP BAR ================= */
     .topbar{
       position: sticky;
       top:0;
@@ -58,11 +54,11 @@
       background:rgba(255,255,255,.10);
       border:1px solid rgba(255,255,255,.12);
       font-weight:900;
+      user-select:none;
     }
     .title{ font-weight:900;font-size:16px; }
     .subtitle{ font-size:12px;color:var(--muted); }
 
-    /* ================= BUTTONS ================= */
     .btn{
       height:var(--tap);
       padding:0 14px;
@@ -72,7 +68,9 @@
       color:var(--text);
       font-weight:800;
       cursor:pointer;
+      user-select:none;
     }
+    .btn:active{ transform: translateY(1px); }
     .btn-primary{
       background:rgba(10,132,255,.18);
       border-color:rgba(10,132,255,.40);
@@ -82,7 +80,6 @@
       border-color:rgba(255,69,58,.40);
     }
 
-    /* ================= LAYOUT ================= */
     .container{
       width:min(1100px,92vw);
       margin:14px auto 40px;
@@ -100,7 +97,6 @@
     .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
     .grid3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
 
-    /* ================= FORMS ================= */
     .field{ display:flex; flex-direction:column; gap:6px; }
     label{ font-size:12px;color:var(--muted);font-weight:800; }
 
@@ -113,7 +109,6 @@
       padding:0 12px;
       outline:none;
     }
-
     input:focus, select:focus{
       border-color:rgba(10,132,255,.55);
       box-shadow:0 0 0 3px rgba(10,132,255,.18);
@@ -129,14 +124,9 @@
       background-color:#0f1720;
       color:#f3f4f6;
     }
-    select:focus option{
-      background-color:#0f1720;
-      color:#f3f4f6;
-    }
 
     .hint{ font-size:11px;color:var(--muted); }
 
-    /* ================= LIST ================= */
     .item{
       background:rgba(255,255,255,.06);
       border:1px solid rgba(255,255,255,.12);
@@ -145,11 +135,16 @@
       margin-bottom:10px;
     }
     .itemTitle{ font-weight:900;font-size:14px; }
-    .itemMeta{ font-size:12px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap; }
-    .money{ font-weight:900;font-size:16px;text-align:right; }
-    .miniBtns{ display:flex; gap:10px; margin-top:8px; justify-content:flex-end; }
+    .itemMeta{ font-size:12px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap; margin-top:4px; }
+    .money{ font-weight:950;font-size:16px;text-align:right; }
 
-    /* ================= SUMMARY ================= */
+    .rowline{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+    }
+
     .summaryGrid{
       display:grid;
       grid-template-columns:1fr 1fr;
@@ -163,7 +158,7 @@
       padding:12px;
     }
     .sumCard .k{ font-size:12px;color:var(--muted);font-weight:800; }
-    .sumCard .v{ font-size:18px;font-weight:900; }
+    .sumCard .v{ font-size:18px;font-weight:950; font-variant-numeric: tabular-nums; }
 
     @media(min-width:820px){
       .container{ grid-template-columns:1fr 1fr; }
@@ -180,10 +175,10 @@
       <div class="logo">MB</div>
       <div>
         <div class="title">Compras</div>
-        <div class="subtitle">Control de presupuesto</div>
+        <div class="subtitle">Control de presupuesto + balance</div>
       </div>
     </div>
-    <button class="btn" id="btnExport">Exportar</button>
+    <button class="btn btn-primary" id="btnExportExcel" title="Exportar Excel">Excel</button>
   </div>
 </header>
 
@@ -191,38 +186,52 @@
 
   <!-- PRESUPUESTO -->
   <section class="card">
-    <h3>Presupuesto disponible</h3>
-    <div class="money" id="disponibleTxt">Q0.00</div>
+    <div class="rowline">
+      <div>
+        <div style="font-weight:950;">Presupuesto disponible</div>
+        <div class="hint">Se actualiza con compras y fondos agregados</div>
+      </div>
+      <div class="money" id="disponibleTxt">Q0.00</div>
+    </div>
 
-    <div class="grid2" style="margin-top:10px;">
+    <div class="grid2" style="margin-top:12px;">
       <div class="field">
         <label>Definir presupuesto (Q)</label>
-        <input id="presupuestoInput" type="number" step="0.01">
+        <input id="presupuestoInput" type="number" step="0.01" placeholder="Ej: 5000">
+        <div class="hint">Esto ajusta el saldo disponible a ese monto.</div>
       </div>
       <div class="field">
         <label>Agregar fondos (Q)</label>
-        <input id="agregarInput" type="number" step="0.01">
+        <input id="agregarInput" type="number" step="0.01" placeholder="Ej: 1000">
+        <div class="hint">Suma dinero al saldo disponible.</div>
       </div>
     </div>
 
-    <div class="grid2" style="margin-top:10px;">
+    <div class="grid3" style="margin-top:10px;">
       <button class="btn btn-primary" id="btnSetPresupuesto">Guardar</button>
       <button class="btn" id="btnAddFondos">Agregar</button>
+      <button class="btn btn-danger" id="btnResetAll">Borrar todo</button>
+    </div>
+
+    <div class="hint" style="margin-top:10px;">
+      Exportación Excel incluye: Balance, Movimientos (con saldos) y Detalle de compras.
     </div>
   </section>
 
   <!-- REGISTRAR -->
   <section class="card">
-    <h3>Registrar compra</h3>
-    <form id="formCompra">
+    <div style="font-weight:950;">Registrar compra</div>
+    <div class="hint">Cantidad × Precio = Total (se descuenta del disponible)</div>
+
+    <form id="formCompra" style="margin-top:10px;">
       <div class="grid2">
         <div class="field">
           <label>Fecha</label>
-          <input type="date" id="fecha">
+          <input type="date" id="fecha" required>
         </div>
         <div class="field">
           <label>Distribución</label>
-          <select id="distribucion">
+          <select id="distribucion" required>
             <option value="">Seleccionar</option>
             <option>Atlantic Plaza</option>
             <option>Roosevelt</option>
@@ -234,28 +243,31 @@
 
       <div class="field" style="margin-top:10px;">
         <label>Producto</label>
-        <input id="producto">
+        <input id="producto" placeholder="Ej: Lechuga, Limón..." required>
       </div>
 
       <div class="grid3" style="margin-top:10px;">
         <div class="field">
           <label>Cantidad</label>
-          <input id="cantidad" type="number" step="0.01">
+          <input id="cantidad" type="number" step="0.01" placeholder="Ej: 12" required>
         </div>
         <div class="field">
-          <label>Precio (Q)</label>
-          <input id="precio" type="number" step="0.01">
+          <label>Precio unitario (Q)</label>
+          <input id="precio" type="number" step="0.01" placeholder="Ej: 50" required>
         </div>
         <div class="field">
-          <label>Total</label>
-          <input id="totalPreview" readonly>
+          <label>Total (Q)</label>
+          <input id="totalPreview" readonly value="Q0.00">
         </div>
       </div>
 
-      <input type="hidden" id="editId">
+      <div class="field" style="margin-top:10px;">
+        <label>Nota (opcional)</label>
+        <input id="nota" placeholder="Proveedor / evento / observación">
+      </div>
 
       <div class="grid2" style="margin-top:10px;">
-        <button class="btn btn-primary">Guardar</button>
+        <button class="btn btn-primary" type="submit">Guardar compra</button>
         <button class="btn" type="button" id="btnLimpiar">Limpiar</button>
       </div>
     </form>
@@ -263,69 +275,358 @@
 
   <!-- LISTA -->
   <section class="card span2">
-    <h3>Compras registradas</h3>
-    <div id="list"></div>
+    <div class="rowline">
+      <div>
+        <div style="font-weight:950;">Compras registradas</div>
+        <div class="hint">Resumen en quetzales por sucursal (solo compras)</div>
+      </div>
+      <div class="money" id="gastadoTxt">Q0.00</div>
+    </div>
+
+    <div style="margin-top:10px;" id="list"></div>
     <div class="summaryGrid" id="summaryGrid"></div>
   </section>
 
 </main>
 
 <script>
-  const KEYS={c:"compras",p:"presupuesto"};
-  const $=i=>document.getElementById(i);
-
-  const f=$("formCompra");
-  const fecha=$("fecha"),dist=$("distribucion"),prod=$("producto");
-  const cant=$("cantidad"),precio=$("precio"),totPrev=$("totalPreview");
-  const dispTxt=$("disponibleTxt"),list=$("list"),sumGrid=$("summaryGrid");
-
-  function n(v){return Number(v)||0}
-  function m(v){return "Q"+n(v).toFixed(2)}
-  function load(){return JSON.parse(localStorage.getItem(KEYS.c)||"[]")}
-  function save(a){localStorage.setItem(KEYS.c,JSON.stringify(a))}
-  function disp(){return n(localStorage.getItem(KEYS.p))}
-  function setDisp(v){localStorage.setItem(KEYS.p,v)}
-
-  function updateTotal(){ totPrev.value=m(n(cant.value)*n(precio.value)); }
-  cant.oninput=precio.oninput=updateTotal;
-
-  $("btnSetPresupuesto").onclick=()=>{setDisp(n($("presupuestoInput").value));render()}
-  $("btnAddFondos").onclick=()=>{setDisp(disp()+n($("agregarInput").value));render()}
-
-  f.onsubmit=e=>{
-    e.preventDefault();
-    const t=n(cant.value)*n(precio.value);
-    setDisp(disp()-t);
-    const a=load();
-    a.push({fecha:fecha.value,dist:dist.value,prod:prod.value,total:t});
-    save(a);f.reset();updateTotal();render();
+  // =========================
+  // Storage Keys
+  // =========================
+  const KEYS = {
+    compras: "mb_compras_excel_v1",       // array
+    saldo: "mb_saldo_actual_v1",         // number
+    movimientos: "mb_movimientos_v1"     // array (balance log)
   };
 
-  function render(){
-    dispTxt.textContent=m(disp());
-    const a=load();
-    list.innerHTML="";
-    let sums={};
-    a.forEach(r=>{
-      sums[r.dist]=(sums[r.dist]||0)+r.total;
-      list.innerHTML+=`
-        <div class="item">
-          <div class="itemTitle">${r.prod}</div>
-          <div class="itemMeta">${r.fecha} • ${r.dist}</div>
-          <div class="money">${m(r.total)}</div>
-        </div>`;
-    });
-    sumGrid.innerHTML="";
-    Object.keys(sums).forEach(k=>{
-      sumGrid.innerHTML+=`
-        <div class="sumCard">
-          <div class="k">${k}</div>
-          <div class="v">${m(sums[k])}</div>
-        </div>`;
-    });
+  const $ = (id) => document.getElementById(id);
+
+  // Inputs
+  const f = $("formCompra");
+  const fecha = $("fecha"), dist = $("distribucion"), prod = $("producto");
+  const cant = $("cantidad"), precio = $("precio"), nota = $("nota"), totPrev = $("totalPreview");
+
+  // Presupuesto
+  const presupuestoInput = $("presupuestoInput");
+  const agregarInput = $("agregarInput");
+
+  // UI
+  const dispTxt = $("disponibleTxt");
+  const gastadoTxt = $("gastadoTxt");
+  const list = $("list");
+  const sumGrid = $("summaryGrid");
+
+  // Helpers
+  function n(v){ const x = Number(v); return Number.isFinite(x) ? x : 0; }
+  function money(v){ return "Q" + n(v).toFixed(2); }
+  function todayISO(){
+    const d = new Date();
+    const tzOffset = d.getTimezoneOffset()*60000;
+    return new Date(d - tzOffset).toISOString().slice(0,10);
+  }
+  function nowISO(){
+    const d = new Date();
+    const tzOffset = d.getTimezoneOffset()*60000;
+    return new Date(d - tzOffset).toISOString().replace("T"," ").slice(0,19);
+  }
+  function uid(){
+    return "X" + Date.now().toString(36) + Math.random().toString(36).slice(2,7).toUpperCase();
+  }
+  function esc(s){
+    return (s ?? "").toString()
+      .replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;").replaceAll("'","&#039;");
   }
 
-  fecha.value=new Date().toISOString().slice(0,10);
+  // Storage
+  function loadCompras(){ try{ return JSON.parse(localStorage.getItem(KEYS.compras) || "[]") } catch { return [] } }
+  function saveCompras(a){ localStorage.setItem(KEYS.compras, JSON.stringify(a)); }
+
+  function getSaldo(){ return n(localStorage.getItem(KEYS.saldo)); }
+  function setSaldo(v){ localStorage.setItem(KEYS.saldo, String(n(v))); }
+
+  function loadMovs(){ try{ return JSON.parse(localStorage.getItem(KEYS.movimientos) || "[]") } catch { return [] } }
+  function saveMovs(a){ localStorage.setItem(KEYS.movimientos, JSON.stringify(a)); }
+
+  // Movimientos de balance
+  function addMovimiento({tipo, detalle, delta}){
+    const before = getSaldo();
+    const after = before + n(delta);
+    setSaldo(after);
+
+    const movs = loadMovs();
+    movs.push({
+      id: uid(),
+      fechaHora: nowISO(),
+      tipo,
+      detalle: detalle || "",
+      delta: n(delta),
+      saldo: after
+    });
+    saveMovs(movs);
+  }
+
+  // Total preview
+  function updateTotal(){
+    const t = n(cant.value) * n(precio.value);
+    totPrev.value = money(t);
+  }
+  cant.addEventListener("input", updateTotal);
+  precio.addEventListener("input", updateTotal);
+
+  // Acciones presupuesto
+  $("btnSetPresupuesto").addEventListener("click", () => {
+    const newVal = n(presupuestoInput.value);
+    if(newVal <= 0){ alert("Ingresa un presupuesto válido mayor a 0."); return; }
+
+    const current = getSaldo();
+    const delta = newVal - current; // ajusta saldo al valor exacto
+    addMovimiento({ tipo:"AJUSTE", detalle:"Ajuste de presupuesto", delta });
+
+    presupuestoInput.value = "";
+    render();
+  });
+
+  $("btnAddFondos").addEventListener("click", () => {
+    const add = n(agregarInput.value);
+    if(add <= 0){ alert("Ingresa un monto válido para agregar."); return; }
+
+    addMovimiento({ tipo:"FONDOS", detalle:"Fondos agregados", delta: +add });
+
+    agregarInput.value = "";
+    render();
+  });
+
+  $("btnResetAll").addEventListener("click", () => {
+    const ok = confirm("Esto borrará compras, saldo y movimientos en este dispositivo. ¿Continuar?");
+    if(!ok) return;
+    localStorage.removeItem(KEYS.compras);
+    localStorage.removeItem(KEYS.saldo);
+    localStorage.removeItem(KEYS.movimientos);
+    f.reset();
+    fecha.value = todayISO();
+    updateTotal();
+    render();
+  });
+
+  $("btnLimpiar").addEventListener("click", () => {
+    f.reset();
+    fecha.value = todayISO();
+    updateTotal();
+    prod.focus();
+  });
+
+  // Guardar compra
+  f.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const t = n(cant.value) * n(precio.value);
+    if(t <= 0){ alert("Total inválido."); return; }
+
+    // Movimiento de compra (resta)
+    addMovimiento({
+      tipo: "COMPRA",
+      detalle: `${prod.value} — ${dist.value}`,
+      delta: -t
+    });
+
+    const a = loadCompras();
+    a.push({
+      id: uid(),
+      fecha: fecha.value,
+      dist: dist.value,
+      prod: prod.value,
+      cant: n(cant.value),
+      precio: n(precio.value),
+      total: t,
+      nota: (nota.value || "").trim()
+    });
+    saveCompras(a);
+
+    f.reset();
+    fecha.value = todayISO();
+    updateTotal();
+    render();
+  });
+
+  // Resumen por sucursal + lista
+  function render(){
+    const saldo = getSaldo();
+    dispTxt.textContent = money(saldo);
+
+    const compras = loadCompras();
+    if(compras.length === 0){
+      list.innerHTML = `<div class="item"><div class="itemTitle">No hay compras aún</div><div class="itemMeta">Registra tu primera compra arriba.</div></div>`;
+      sumGrid.innerHTML = "";
+      gastadoTxt.textContent = money(0);
+      return;
+    }
+
+    let totalGastado = 0;
+    const sums = {};
+    const order = ["Atlantic Plaza","Roosevelt","Planta","Sancris"];
+
+    list.innerHTML = "";
+    compras.slice().reverse().forEach(r=>{
+      totalGastado += n(r.total);
+      sums[r.dist] = (sums[r.dist] || 0) + n(r.total);
+
+      list.innerHTML += `
+        <div class="item">
+          <div class="rowline">
+            <div>
+              <div class="itemTitle">${esc(r.prod)}</div>
+              <div class="itemMeta">
+                <span>${esc(r.fecha)}</span> •
+                <span>${esc(r.dist)}</span> •
+                <span>Cant: <b>${n(r.cant).toFixed(2).replace(/\.00$/,"")}</b></span> •
+                <span>P/U: <b>${money(r.precio)}</b></span>
+              </div>
+              ${r.nota ? `<div class="hint" style="margin-top:6px;">${esc(r.nota)}</div>` : ``}
+            </div>
+            <div class="money">${money(r.total)}</div>
+          </div>
+        </div>
+      `;
+    });
+
+    gastadoTxt.textContent = money(totalGastado);
+
+    // Summary cards
+    sumGrid.innerHTML = "";
+    order.forEach(k=>{
+      if(sums[k] == null) sums[k] = 0;
+      sumGrid.innerHTML += `
+        <div class="sumCard">
+          <div class="k">${esc(k)}</div>
+          <div class="v">${money(sums[k])}</div>
+        </div>
+      `;
+    });
+
+    sumGrid.innerHTML += `
+      <div class="sumCard" style="border-color: rgba(10,132,255,.35);">
+        <div class="k">TOTAL GASTADO</div>
+        <div class="v">${money(totalGastado)}</div>
+      </div>
+    `;
+  }
+
+  // =========================
+  // EXPORTAR A EXCEL (.XLS HTML)
+  // =========================
+  function exportExcel(){
+    const compras = loadCompras();
+    const movs = loadMovs();
+    const saldo = getSaldo();
+
+    // Balance global:
+    // fondos netos = suma de deltas positivos; gastos = suma de deltas negativos (en positivo)
+    let fondos = 0, gastos = 0;
+    movs.forEach(m=>{
+      const d = n(m.delta);
+      if(d > 0) fondos += d;
+      if(d < 0) gastos += Math.abs(d);
+    });
+
+    const today = todayISO();
+
+    // Construimos un HTML que Excel abre como hoja
+    const html = `
+      <html>
+      <head>
+        <meta charset="utf-8" />
+        <style>
+          body{ font-family: Calibri, Arial; font-size: 11pt; }
+          h1{ font-size: 16pt; margin: 0 0 8px; }
+          h2{ font-size: 13pt; margin: 14px 0 6px; }
+          table{ border-collapse: collapse; width: 100%; }
+          th, td{ border: 1px solid #d0d0d0; padding: 6px 8px; }
+          th{ background:#f2f2f2; font-weight:700; }
+          .num{ text-align:right; }
+          .muted{ color:#666; }
+          .box{ border:1px solid #d0d0d0; padding:10px; margin: 6px 0 10px; }
+        </style>
+      </head>
+      <body>
+        <h1>Reporte de Compras y Balance</h1>
+        <div class="muted">Generado: ${esc(today)} | Moneda: Quetzales (Q)</div>
+
+        <h2>Balance</h2>
+        <div class="box">
+          <table>
+            <tr><th>Concepto</th><th class="num">Monto</th></tr>
+            <tr><td>Fondos / Ajustes (+)</td><td class="num">${money(fondos)}</td></tr>
+            <tr><td>Gastos por compras (-)</td><td class="num">${money(gastos)}</td></tr>
+            <tr><td><b>Saldo actual</b></td><td class="num"><b>${money(saldo)}</b></td></tr>
+          </table>
+        </div>
+
+        <h2>Movimientos de saldo</h2>
+        <table>
+          <tr>
+            <th>Fecha/Hora</th>
+            <th>Tipo</th>
+            <th>Detalle</th>
+            <th class="num">Delta</th>
+            <th class="num">Saldo</th>
+          </tr>
+          ${movs.map(m=>`
+            <tr>
+              <td>${esc(m.fechaHora||"")}</td>
+              <td>${esc(m.tipo||"")}</td>
+              <td>${esc(m.detalle||"")}</td>
+              <td class="num">${money(m.delta)}</td>
+              <td class="num">${money(m.saldo)}</td>
+            </tr>
+          `).join("") || `<tr><td colspan="5" class="muted">Sin movimientos.</td></tr>`}
+        </table>
+
+        <h2>Detalle de compras</h2>
+        <table>
+          <tr>
+            <th>Fecha</th>
+            <th>Distribución</th>
+            <th>Producto</th>
+            <th class="num">Cantidad</th>
+            <th class="num">Precio Unitario</th>
+            <th class="num">Total</th>
+            <th>Nota</th>
+          </tr>
+          ${compras.map(r=>`
+            <tr>
+              <td>${esc(r.fecha||"")}</td>
+              <td>${esc(r.dist||"")}</td>
+              <td>${esc(r.prod||"")}</td>
+              <td class="num">${n(r.cant).toFixed(2).replace(/\.00$/,"")}</td>
+              <td class="num">${money(r.precio)}</td>
+              <td class="num">${money(r.total)}</td>
+              <td>${esc(r.nota||"")}</td>
+            </tr>
+          `).join("") || `<tr><td colspan="7" class="muted">Sin compras.</td></tr>`}
+        </table>
+      </body>
+      </html>
+    `;
+
+    const blob = new Blob([html], { type: "application/vnd.ms-excel;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `reporte_compras_${today}.xls`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    URL.revokeObjectURL(url);
+  }
+
+  $("btnExportExcel").addEventListener("click", exportExcel);
+
+  // Init
+  fecha.value = todayISO();
+  updateTotal();
   render();
 </script>
 </body>
