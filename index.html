@@ -10,13 +10,12 @@
     :root{
       --bg:#0b0f14;
       --card: rgba(255,255,255,.06);
-      --card2: rgba(255,255,255,.08);
       --line: rgba(255,255,255,.10);
       --text:#f3f4f6;
       --muted:#a6adbb;
-      --accent:#0a84ff;     /* iOS blue */
-      --danger:#ff453a;     /* iOS red */
-      --ok:#30d158;         /* iOS green */
+      --accent:#0a84ff;
+      --danger:#ff453a;
+      --ok:#30d158;
       --shadow: 0 18px 60px rgba(0,0,0,.40);
       --r: 18px;
       --pad: 16px;
@@ -24,18 +23,19 @@
     }
 
     *{ box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+
     body{
       margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial;
       background:
         radial-gradient(900px 520px at 20% 0%, rgba(10,132,255,.14), transparent 60%),
         radial-gradient(700px 480px at 90% 10%, rgba(48,209,88,.10), transparent 55%),
-        radial-gradient(900px 600px at 60% 110%, rgba(255,159,10,.10), transparent 50%),
         var(--bg);
       color: var(--text);
       padding-bottom: calc(env(safe-area-inset-bottom) + 20px);
     }
 
+    /* ================= TOP BAR ================= */
     .topbar{
       position: sticky;
       top:0;
@@ -45,972 +45,288 @@
       background: rgba(10,10,12,.55);
       border-bottom: 1px solid var(--line);
     }
-
     .toprow{
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:10px;
     }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-width: 0;
-    }
+    .brand{ display:flex; align-items:center; gap:10px; }
     .logo{
-      width:40px; height:40px;
-      border-radius: 14px;
-      display:grid; place-items:center;
-      background: rgba(255,255,255,.10);
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow: 0 12px 28px rgba(0,0,0,.25);
-      font-weight: 900;
-      letter-spacing: .5px;
-      user-select:none;
+      width:40px;height:40px;border-radius:14px;
+      display:grid;place-items:center;
+      background:rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.12);
+      font-weight:900;
     }
-    .titles{ min-width:0; }
-    .title{
-      font-weight: 900;
-      font-size: 16px;
-      line-height: 1.1;
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
-    .subtitle{
-      margin-top: 2px;
-      color: var(--muted);
-      font-size: 12px;
-      white-space: nowrap;
-      overflow:hidden;
-      text-overflow: ellipsis;
-    }
+    .title{ font-weight:900;font-size:16px; }
+    .subtitle{ font-size:12px;color:var(--muted); }
 
+    /* ================= BUTTONS ================= */
     .btn{
-      height: var(--tap);
-      padding: 0 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
-      font-weight: 800;
+      height:var(--tap);
+      padding:0 14px;
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      font-weight:800;
       cursor:pointer;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap:8px;
-      user-select:none;
     }
-    .btn:active{ transform: translateY(1px); }
     .btn-primary{
-      background: rgba(10,132,255,.18);
-      border-color: rgba(10,132,255,.40);
+      background:rgba(10,132,255,.18);
+      border-color:rgba(10,132,255,.40);
     }
     .btn-danger{
-      background: rgba(255,69,58,.14);
-      border-color: rgba(255,69,58,.35);
-      color: #ffd6d3;
-    }
-    .btn-ghost{
-      background: transparent;
-      border-color: rgba(255,255,255,.10);
+      background:rgba(255,69,58,.16);
+      border-color:rgba(255,69,58,.40);
     }
 
+    /* ================= LAYOUT ================= */
     .container{
-      width:min(1100px, 92vw);
-      margin: 14px auto 40px;
+      width:min(1100px,92vw);
+      margin:14px auto 40px;
       display:grid;
-      gap: 12px;
+      gap:12px;
     }
-
     .card{
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: var(--r);
-      padding: var(--pad);
-      box-shadow: var(--shadow);
-      overflow:hidden;
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--r);
+      padding:var(--pad);
+      box-shadow:var(--shadow);
     }
 
-    .grid2{
-      display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    .grid3{
-      display:grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 10px;
-    }
+    .grid2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+    .grid3{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
 
-    .statRow{
-      display:grid;
-      grid-template-columns: 1.2fr .8fr;
-      gap: 10px;
-      align-items:stretch;
-      margin-top: 10px;
-    }
-
-    .pill{
-      border-radius: 16px;
-      padding: 12px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-    }
-    .pill .k{
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 800;
-      letter-spacing: .2px;
-    }
-    .pill .v{
-      margin-top: 6px;
-      font-size: 22px;
-      font-weight: 950;
-      letter-spacing: .2px;
-    }
-    .pill .sub{
-      margin-top: 2px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .pill.ok{ border-color: rgba(48,209,88,.28); }
-    .pill.warn{ border-color: rgba(255,159,10,.28); }
-    .pill.bad{ border-color: rgba(255,69,58,.30); }
-
-    .sectionTitle{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      margin: 0 0 10px;
-    }
-    .sectionTitle h2{
-      margin:0;
-      font-size: 14px;
-      font-weight: 950;
-      letter-spacing: .2px;
-    }
-    .count{
-      color: var(--muted);
-      font-size: 12px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
-      padding: 6px 10px;
-      border-radius: 999px;
-      white-space:nowrap;
-    }
-
+    /* ================= FORMS ================= */
     .field{ display:flex; flex-direction:column; gap:6px; }
-    label{ font-size: 12px; color: var(--muted); font-weight: 800; }
+    label{ font-size:12px;color:var(--muted);font-weight:800; }
 
     input, select{
-      height: var(--tap);
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
-      padding: 0 12px;
+      height:var(--tap);
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,.12);
+      background:#111827;
+      color:var(--text);
+      padding:0 12px;
       outline:none;
     }
+
     input:focus, select:focus{
-      border-color: rgba(10,132,255,.55);
-      box-shadow: 0 0 0 3px rgba(10,132,255,.18);
-    }
-    input::placeholder{ color: rgba(166,173,187,.6); }
-
-    .hint{
-      color: var(--muted);
-      font-size: 11px;
-      margin-top: -2px;
+      border-color:rgba(10,132,255,.55);
+      box-shadow:0 0 0 3px rgba(10,132,255,.18);
     }
 
-    .rowActions{
-      display:flex;
-      gap:10px;
-      justify-content:flex-end;
-      flex-wrap:wrap;
-      margin-top: 10px;
+    /* ===== FIX CONTRASTE SELECT MÓVIL ===== */
+    select{
+      color-scheme: dark;
+      background-color:#111827;
+      color:#f3f4f6;
+    }
+    select option{
+      background-color:#0f1720;
+      color:#f3f4f6;
+    }
+    select:focus option{
+      background-color:#0f1720;
+      color:#f3f4f6;
     }
 
-    /* List */
-    .filters{
-      display:grid;
-      grid-template-columns: 1.5fr 1fr 1fr 1fr;
-      gap: 10px;
-      margin-bottom: 10px;
-    }
+    .hint{ font-size:11px;color:var(--muted); }
 
-    .list{
-      display:grid;
-      gap: 10px;
-    }
+    /* ================= LIST ================= */
     .item{
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      padding: 12px;
-      display:grid;
-      gap: 8px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:12px;
+      margin-bottom:10px;
     }
-    .itemTop{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap: 10px;
-    }
-    .itemTitle{
-      font-weight: 950;
-      font-size: 14px;
-      letter-spacing: .2px;
-      margin:0;
-    }
-    .itemMeta{
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 3px;
-      display:flex;
-      gap: 10px;
-      flex-wrap:wrap;
-    }
-    .badge{
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.04);
-      padding: 4px 8px;
-      border-radius: 999px;
-    }
-    .money{
-      text-align:right;
-      font-variant-numeric: tabular-nums;
-    }
-    .money .t{
-      font-weight: 950;
-      font-size: 16px;
-    }
-    .money .s{
-      color: var(--muted);
-      font-size: 12px;
-      margin-top: 2px;
-    }
+    .itemTitle{ font-weight:900;font-size:14px; }
+    .itemMeta{ font-size:12px;color:var(--muted);display:flex;gap:8px;flex-wrap:wrap; }
+    .money{ font-weight:900;font-size:16px;text-align:right; }
+    .miniBtns{ display:flex; gap:10px; margin-top:8px; justify-content:flex-end; }
 
-    .itemNote{
-      color: rgba(243,244,246,.92);
-      font-size: 13px;
-      line-height: 1.35;
-      opacity: .95;
-      border-left: 2px solid rgba(255,255,255,.14);
-      padding-left: 10px;
-    }
-
-    .miniBtns{
-      display:flex;
-      gap: 10px;
-      justify-content:flex-end;
-      flex-wrap:wrap;
-    }
-    .btn-mini{
-      height: 40px;
-      border-radius: 14px;
-      padding: 0 12px;
-      font-weight: 900;
-      font-size: 12px;
-    }
-
+    /* ================= SUMMARY ================= */
     .summaryGrid{
       display:grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-      margin-top: 10px;
+      grid-template-columns:1fr 1fr;
+      gap:10px;
+      margin-top:10px;
     }
     .sumCard{
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.05);
-      padding: 12px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:16px;
+      padding:12px;
     }
-    .sumCard .k{ color: var(--muted); font-size: 12px; font-weight: 800; }
-    .sumCard .v{ margin-top: 6px; font-size: 18px; font-weight: 950; font-variant-numeric: tabular-nums; }
+    .sumCard .k{ font-size:12px;color:var(--muted);font-weight:800; }
+    .sumCard .v{ font-size:18px;font-weight:900; }
 
-    .foot{
-      color: var(--muted);
-      font-size: 12px;
-      display:flex;
-      justify-content:space-between;
-      gap: 10px;
-      flex-wrap:wrap;
-      padding: 0 4px;
-    }
-
-    /* Mobile tweaks */
-    @media (min-width: 820px){
-      .container{ grid-template-columns: 1fr 1fr; align-items:start; }
-      .card.span2{ grid-column: 1 / -1; }
-      .filters{ grid-template-columns: 2fr 1fr 1fr 1fr; }
-      .summaryGrid{ grid-template-columns: repeat(4, 1fr); }
-      .statRow{ grid-template-columns: 1fr 1fr; }
+    @media(min-width:820px){
+      .container{ grid-template-columns:1fr 1fr; }
+      .span2{ grid-column:1/-1; }
+      .summaryGrid{ grid-template-columns:repeat(4,1fr); }
     }
   </style>
 </head>
 
 <body>
-  <header class="topbar">
-    <div class="toprow">
-      <div class="brand">
-        <div class="logo">MB</div>
-        <div class="titles">
-          <div class="title">Compras</div>
-          <div class="subtitle">Control + presupuesto disponible</div>
-        </div>
+<header class="topbar">
+  <div class="toprow">
+    <div class="brand">
+      <div class="logo">MB</div>
+      <div>
+        <div class="title">Compras</div>
+        <div class="subtitle">Control de presupuesto</div>
       </div>
-
-      <button id="btnExport" class="btn btn-ghost" title="Exportar CSV">Exportar</button>
     </div>
-  </header>
+    <button class="btn" id="btnExport">Exportar</button>
+  </div>
+</header>
 
-  <main class="container">
+<main class="container">
 
-    <!-- Presupuesto -->
-    <section class="card">
-      <div class="sectionTitle">
-        <h2>Presupuesto</h2>
-        <div class="count" id="budgetStatus">—</div>
+  <!-- PRESUPUESTO -->
+  <section class="card">
+    <h3>Presupuesto disponible</h3>
+    <div class="money" id="disponibleTxt">Q0.00</div>
+
+    <div class="grid2" style="margin-top:10px;">
+      <div class="field">
+        <label>Definir presupuesto (Q)</label>
+        <input id="presupuestoInput" type="number" step="0.01">
       </div>
-
-      <div class="statRow">
-        <div class="pill" id="pillDisponible">
-          <div class="k">Disponible</div>
-          <div class="v" id="disponibleTxt">Q0.00</div>
-          <div class="sub" id="subDisponible">Se descuenta con cada compra</div>
-        </div>
-
-        <div class="pill">
-          <div class="k">Gastado (filtrado)</div>
-          <div class="v" id="gastadoTxt">Q0.00</div>
-          <div class="sub">Según filtros actuales</div>
-        </div>
+      <div class="field">
+        <label>Agregar fondos (Q)</label>
+        <input id="agregarInput" type="number" step="0.01">
       </div>
+    </div>
 
-      <div class="grid2" style="margin-top:10px;">
+    <div class="grid2" style="margin-top:10px;">
+      <button class="btn btn-primary" id="btnSetPresupuesto">Guardar</button>
+      <button class="btn" id="btnAddFondos">Agregar</button>
+    </div>
+  </section>
+
+  <!-- REGISTRAR -->
+  <section class="card">
+    <h3>Registrar compra</h3>
+    <form id="formCompra">
+      <div class="grid2">
         <div class="field">
-          <label>Establecer presupuesto (Q)</label>
-          <input id="presupuestoInput" type="number" min="0" step="0.01" placeholder="Ej: 5000" />
-          <div class="hint">Define el dinero inicial disponible.</div>
+          <label>Fecha</label>
+          <input type="date" id="fecha">
         </div>
         <div class="field">
-          <label>Agregar fondos (Q)</label>
-          <input id="agregarInput" type="number" min="0" step="0.01" placeholder="Ej: 1000" />
-          <div class="hint">Suma dinero al disponible.</div>
-        </div>
-      </div>
-
-      <div class="rowActions">
-        <button class="btn btn-primary" id="btnSetPresupuesto">Guardar presupuesto</button>
-        <button class="btn" id="btnAddFondos">Agregar fondos</button>
-        <button class="btn btn-danger" id="btnResetAll">Borrar todo</button>
-      </div>
-
-      <div class="hint" style="margin-top:10px;">
-        Funciona offline en tu teléfono. Recomendación: exporta CSV para respaldo.
-      </div>
-    </section>
-
-    <!-- Registrar compra -->
-    <section class="card">
-      <div class="sectionTitle">
-        <h2>Registrar compra</h2>
-        <div class="count" id="editBadge">Nuevo</div>
-      </div>
-
-      <form id="formCompra" autocomplete="off">
-        <div class="grid2">
-          <div class="field">
-            <label>Fecha</label>
-            <input type="date" id="fecha" required />
-          </div>
-          <div class="field">
-            <label>Distribución</label>
-            <select id="distribucion" required>
-              <option value="">Seleccionar...</option>
-              <option>Atlantic Plaza</option>
-              <option>Roosevelt</option>
-              <option>Planta</option>
-              <option>Sancris</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="field" style="margin-top:10px;">
-          <label>Producto</label>
-          <input type="text" id="producto" placeholder="Ej: Lechuga, Limón..." required />
-        </div>
-
-        <div class="grid3" style="margin-top:10px;">
-          <div class="field">
-            <label>Cantidad</label>
-            <input type="number" id="cantidad" min="0" step="0.01" placeholder="Ej: 12" required />
-            <div class="hint">Enteros o decimales.</div>
-          </div>
-          <div class="field">
-            <label>Precio unitario (Q)</label>
-            <input type="number" id="precio" min="0" step="0.01" placeholder="Ej: 50" required />
-            <div class="hint">Costo por unidad.</div>
-          </div>
-          <div class="field">
-            <label>Total (Q)</label>
-            <input type="text" id="totalPreview" readonly value="Q0.00" />
-            <div class="hint">Cantidad × precio.</div>
-          </div>
-        </div>
-
-        <div class="field" style="margin-top:10px;">
-          <label>Nota (opcional)</label>
-          <input type="text" id="nota" placeholder="Ej: Proveedor X / Evento / Urgente..." />
-        </div>
-
-        <input type="hidden" id="editId" value="" />
-
-        <div class="rowActions">
-          <button class="btn btn-primary" type="submit" id="btnGuardar">Guardar compra</button>
-          <button class="btn" type="button" id="btnLimpiar">Limpiar</button>
-        </div>
-      </form>
-    </section>
-
-    <!-- Registros -->
-    <section class="card span2">
-      <div class="sectionTitle">
-        <h2>Registros</h2>
-        <div class="count" id="countPill">0</div>
-      </div>
-
-      <div class="filters">
-        <div class="field">
-          <label>Buscar</label>
-          <input type="text" id="q" placeholder="Producto o nota..." />
-        </div>
-
-        <div class="field">
-          <label>Sucursal</label>
-          <select id="fDistribucion">
-            <option value="">Todas</option>
+          <label>Distribución</label>
+          <select id="distribucion">
+            <option value="">Seleccionar</option>
             <option>Atlantic Plaza</option>
             <option>Roosevelt</option>
             <option>Planta</option>
             <option>Sancris</option>
           </select>
         </div>
+      </div>
 
+      <div class="field" style="margin-top:10px;">
+        <label>Producto</label>
+        <input id="producto">
+      </div>
+
+      <div class="grid3" style="margin-top:10px;">
         <div class="field">
-          <label>Desde</label>
-          <input type="date" id="desde" />
+          <label>Cantidad</label>
+          <input id="cantidad" type="number" step="0.01">
         </div>
-
         <div class="field">
-          <label>Hasta</label>
-          <input type="date" id="hasta" />
+          <label>Precio (Q)</label>
+          <input id="precio" type="number" step="0.01">
+        </div>
+        <div class="field">
+          <label>Total</label>
+          <input id="totalPreview" readonly>
         </div>
       </div>
 
-      <div class="rowActions" style="justify-content:space-between;">
-        <div class="hint">Tip: toca “Editar” para corregir y el presupuesto se ajusta.</div>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <select id="orden" class="btn" style="height:var(--tap);">
-            <option value="fecha_desc">Orden: fecha ↓</option>
-            <option value="fecha_asc">Orden: fecha ↑</option>
-            <option value="total_desc">Orden: total ↓</option>
-            <option value="producto_asc">Orden: producto A→Z</option>
-          </select>
-          <button class="btn" id="btnResetFiltros" type="button">Reset</button>
-        </div>
+      <input type="hidden" id="editId">
+
+      <div class="grid2" style="margin-top:10px;">
+        <button class="btn btn-primary">Guardar</button>
+        <button class="btn" type="button" id="btnLimpiar">Limpiar</button>
       </div>
-
-      <div class="list" id="list"></div>
-
-      <div class="summaryGrid" id="summaryGrid"></div>
-    </section>
-
-    <footer class="foot">
-      <div>Offline + GitHub Pages ✅</div>
-      <div>Moneda: Quetzales (Q)</div>
-    </footer>
-  </main>
-
-  <script>
-    /* =========================================================
-       Compras + Presupuesto — 1 archivo (mobile first)
-       - Guarda en localStorage
-       - Presupuesto disponible se descuenta por cada compra
-       - Al editar/eliminar, ajusta correctamente
-    ========================================================= */
-
-    const KEYS = {
-      compras: "mb_compras_v2",
-      presupuesto: "mb_presupuesto_v1" // número
-    };
-
-    const $ = (id) => document.getElementById(id);
-
-    // Inputs compra
-    const form = $("formCompra");
-    const inpFecha = $("fecha");
-    const inpDistrib = $("distribucion");
-    const inpProducto = $("producto");
-    const inpCantidad = $("cantidad");
-    const inpPrecio = $("precio");
-    const totalPreview = $("totalPreview");
-    const inpNota = $("nota");
-    const editId = $("editId");
-    const editBadge = $("editBadge");
-
-    // Presupuesto
-    const presupuestoInput = $("presupuestoInput");
-    const agregarInput = $("agregarInput");
-    const disponibleTxt = $("disponibleTxt");
-    const gastadoTxt = $("gastadoTxt");
-    const budgetStatus = $("budgetStatus");
-    const pillDisponible = $("pillDisponible");
-
-    // Filtros
-    const q = $("q");
-    const fDistrib = $("fDistribucion");
-    const desde = $("desde");
-    const hasta = $("hasta");
-    const orden = $("orden");
-    const list = $("list");
-    const countPill = $("countPill");
-    const summaryGrid = $("summaryGrid");
-
-    // Botones
-    $("btnLimpiar").addEventListener("click", clearForm);
-    $("btnResetFiltros").addEventListener("click", resetFiltros);
-    $("btnExport").addEventListener("click", exportCSV);
-    $("btnSetPresupuesto").addEventListener("click", setPresupuesto);
-    $("btnAddFondos").addEventListener("click", addFondos);
-    $("btnResetAll").addEventListener("click", resetAll);
-
-    [q, fDistrib, desde, hasta, orden].forEach(el => el.addEventListener("input", render));
-    [inpCantidad, inpPrecio].forEach(el => el.addEventListener("input", updateTotalPreview));
-
-    function todayISO(){
-      const d = new Date();
-      const tzOffset = d.getTimezoneOffset() * 60000;
-      return new Date(d - tzOffset).toISOString().slice(0,10);
-    }
-
-    function num(v){
-      const n = Number(v);
-      return Number.isFinite(n) ? n : 0;
-    }
-
-    function money(n){
-      const x = num(n);
-      return "Q" + x.toFixed(2);
-    }
-
-    function uid(){
-      return "C" + Date.now().toString(36) + Math.random().toString(36).slice(2,7).toUpperCase();
-    }
-
-    function loadCompras(){
-      try{
-        const raw = localStorage.getItem(KEYS.compras);
-        const arr = raw ? JSON.parse(raw) : [];
-        return Array.isArray(arr) ? arr : [];
-      }catch{ return []; }
-    }
-
-    function saveCompras(arr){
-      localStorage.setItem(KEYS.compras, JSON.stringify(arr));
-    }
-
-    function getPresupuesto(){
-      return num(localStorage.getItem(KEYS.presupuesto));
-    }
-
-    function setPresupuestoValue(v){
-      localStorage.setItem(KEYS.presupuesto, String(num(v)));
-    }
-
-    function calcTotalCompra(cantidad, precio){
-      return num(cantidad) * num(precio);
-    }
-
-    function updateTotalPreview(){
-      const t = calcTotalCompra(inpCantidad.value, inpPrecio.value);
-      totalPreview.value = money(t);
-    }
-
-    function clearForm(){
-      editId.value = "";
-      editBadge.textContent = "Nuevo";
-      $("btnGuardar").textContent = "Guardar compra";
-      inpFecha.value = todayISO();
-      inpDistrib.value = "";
-      inpProducto.value = "";
-      inpCantidad.value = "";
-      inpPrecio.value = "";
-      inpNota.value = "";
-      updateTotalPreview();
-      inpProducto.focus();
-    }
-
-    function applyFilters(items){
-      let out = [...items];
-
-      const qq = (q.value || "").trim().toLowerCase();
-      if(qq){
-        out = out.filter(r =>
-          (r.producto || "").toLowerCase().includes(qq) ||
-          (r.nota || "").toLowerCase().includes(qq) ||
-          (r.distribucion || "").toLowerCase().includes(qq)
-        );
-      }
-
-      const fd = (fDistrib.value || "").trim();
-      if(fd) out = out.filter(r => r.distribucion === fd);
-
-      const d1 = desde.value;
-      const d2 = hasta.value;
-      if(d1) out = out.filter(r => (r.fecha || "") >= d1);
-      if(d2) out = out.filter(r => (r.fecha || "") <= d2);
-
-      const ord = orden.value;
-      out.sort((a,b) => {
-        if(ord === "fecha_desc") return (b.fecha||"").localeCompare(a.fecha||"");
-        if(ord === "fecha_asc")  return (a.fecha||"").localeCompare(b.fecha||"");
-        if(ord === "total_desc") return num(b.total) - num(a.total);
-        if(ord === "producto_asc") return (a.producto||"").localeCompare(b.producto||"");
-        return 0;
-      });
-
-      return out;
-    }
-
-    function gastadoDe(items){
-      return items.reduce((acc,r) => acc + num(r.total), 0);
-    }
-
-    function recomputeDisponible(){
-      // Presupuesto disponible = presupuesto inicial/actual guardado - total gastado global
-      // Pero aquí estamos manejando "presupuesto" como el disponible actual (no histórico).
-      // Ajustamos en el momento de crear/editar/eliminar compras.
-      // Por eso solo lo leemos y mostramos.
-      const disp = getPresupuesto();
-      disponibleTxt.textContent = money(disp);
-
-      // Estado visual
-      const status = disp <= 0 ? "Sin saldo" : (disp < 200 ? "Bajo" : "OK");
-      budgetStatus.textContent = status;
-
-      pillDisponible.classList.remove("ok","warn","bad");
-      if(disp <= 0) pillDisponible.classList.add("bad");
-      else if(disp < 200) pillDisponible.classList.add("warn");
-      else pillDisponible.classList.add("ok");
-    }
-
-    function setPresupuesto(){
-      const v = num(presupuestoInput.value);
-      if(v <= 0){
-        alert("Ingresa un presupuesto válido mayor a 0.");
-        return;
-      }
-      // Esto define el "disponible" actual en Q
-      setPresupuestoValue(v);
-      presupuestoInput.value = "";
-      render();
-    }
-
-    function addFondos(){
-      const add = num(agregarInput.value);
-      if(add <= 0){
-        alert("Ingresa un monto válido para agregar.");
-        return;
-      }
-      const disp = getPresupuesto();
-      setPresupuestoValue(disp + add);
-      agregarInput.value = "";
-      render();
-    }
-
-    function adjustPresupuesto(delta){
-      // delta negativo = se resta (gasto), delta positivo = se devuelve (reembolso)
-      const disp = getPresupuesto();
-      setPresupuestoValue(disp + num(delta));
-    }
-
-    function resetFiltros(){
-      q.value = "";
-      fDistrib.value = "";
-      desde.value = "";
-      hasta.value = "";
-      orden.value = "fecha_desc";
-      render();
-    }
-
-    function resetAll(){
-      const ok = confirm("Esto borrará TODAS las compras y el presupuesto guardado en este dispositivo. ¿Continuar?");
-      if(!ok) return;
-      localStorage.removeItem(KEYS.compras);
-      localStorage.removeItem(KEYS.presupuesto);
-      clearForm();
-      render();
-    }
-
-    function startEdit(id){
-      const compras = loadCompras();
-      const row = compras.find(x => x.id === id);
-      if(!row) return;
-
-      editId.value = row.id;
-      editBadge.textContent = "Editando";
-      $("btnGuardar").textContent = "Actualizar compra";
-
-      inpFecha.value = row.fecha || todayISO();
-      inpDistrib.value = row.distribucion || "";
-      inpProducto.value = row.producto || "";
-      inpCantidad.value = row.cantidad ?? "";
-      inpPrecio.value = row.precio ?? "";
-      inpNota.value = row.nota || "";
-      updateTotalPreview();
-
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      inpProducto.focus();
-    }
-
-    function deleteCompra(id){
-      const compras = loadCompras();
-      const row = compras.find(x => x.id === id);
-      if(!row) return;
-
-      const ok = confirm(`Eliminar?\n\n${row.fecha} — ${row.distribucion}\n${row.producto}\nTotal: ${money(row.total)}`);
-      if(!ok) return;
-
-      // Devolver dinero al disponible (porque se elimina un gasto)
-      adjustPresupuesto(+num(row.total));
-
-      const newArr = compras.filter(x => x.id !== id);
-      saveCompras(newArr);
-
-      if(editId.value === id) clearForm();
-
-      render();
-    }
-
-    function escapeHtml(str){
-      return (str ?? "").toString()
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-    }
-
-    function renderSummary(filtered){
-      const sucursales = ["Atlantic Plaza", "Roosevelt", "Planta", "Sancris"];
-      const sums = Object.fromEntries(sucursales.map(s => [s, 0]));
-      filtered.forEach(r => {
-        const d = r.distribucion;
-        if(sums[d] == null) sums[d] = 0;
-        sums[d] += num(r.total);
-      });
-
-      const total = sucursales.reduce((a,s)=>a+num(sums[s]),0);
-
-      const blocks = sucursales.map(s => `
-        <div class="sumCard">
-          <div class="k">${escapeHtml(s)}</div>
-          <div class="v">${money(sums[s] || 0)}</div>
-        </div>
-      `).join("");
-
-      summaryGrid.innerHTML = blocks + `
-        <div class="sumCard" style="border-color: rgba(10,132,255,.35);">
-          <div class="k">TOTAL (filtrado)</div>
-          <div class="v">${money(total)}</div>
-        </div>
-      `;
-    }
-
-    function exportCSV(){
-      const compras = loadCompras();
-      const filtered = applyFilters(compras);
-
-      const headers = ["fecha","distribucion","producto","cantidad","precio_unitario","total","nota"];
-      const rows = filtered.map(r => [
-        r.fecha || "",
-        r.distribucion || "",
-        r.producto || "",
-        String(r.cantidad ?? ""),
-        String(r.precio ?? ""),
-        String(r.total ?? ""),
-        r.nota || ""
-      ]);
-
-      const csv = [
-        headers.join(","),
-        ...rows.map(cols => cols.map(csvCell).join(","))
-      ].join("\n");
-
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `compras_${todayISO()}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      a.remove();
-
-      URL.revokeObjectURL(url);
-    }
-
-    function csvCell(v){
-      const s = (v ?? "").toString();
-      const escaped = s.replace(/"/g, '""');
-      if(/[,"\n]/.test(escaped)) return `"${escaped}"`;
-      return escaped;
-    }
-
-    function render(){
-      const compras = loadCompras();
-      const filtered = applyFilters(compras);
-
-      countPill.textContent = `${filtered.length} registro${filtered.length===1?"":"s"}`;
-
-      const gastado = gastadoDe(filtered);
-      gastadoTxt.textContent = money(gastado);
-
-      recomputeDisponible();
-      renderSummary(filtered);
-
-      if(filtered.length === 0){
-        list.innerHTML = `<div class="item"><div class="itemTitle">No hay registros</div><div class="itemMeta">Agrega tu primera compra arriba.</div></div>`;
-        return;
-      }
-
-      list.innerHTML = filtered.map(r => `
+    </form>
+  </section>
+
+  <!-- LISTA -->
+  <section class="card span2">
+    <h3>Compras registradas</h3>
+    <div id="list"></div>
+    <div class="summaryGrid" id="summaryGrid"></div>
+  </section>
+
+</main>
+
+<script>
+  const KEYS={c:"compras",p:"presupuesto"};
+  const $=i=>document.getElementById(i);
+
+  const f=$("formCompra");
+  const fecha=$("fecha"),dist=$("distribucion"),prod=$("producto");
+  const cant=$("cantidad"),precio=$("precio"),totPrev=$("totalPreview");
+  const dispTxt=$("disponibleTxt"),list=$("list"),sumGrid=$("summaryGrid");
+
+  function n(v){return Number(v)||0}
+  function m(v){return "Q"+n(v).toFixed(2)}
+  function load(){return JSON.parse(localStorage.getItem(KEYS.c)||"[]")}
+  function save(a){localStorage.setItem(KEYS.c,JSON.stringify(a))}
+  function disp(){return n(localStorage.getItem(KEYS.p))}
+  function setDisp(v){localStorage.setItem(KEYS.p,v)}
+
+  function updateTotal(){ totPrev.value=m(n(cant.value)*n(precio.value)); }
+  cant.oninput=precio.oninput=updateTotal;
+
+  $("btnSetPresupuesto").onclick=()=>{setDisp(n($("presupuestoInput").value));render()}
+  $("btnAddFondos").onclick=()=>{setDisp(disp()+n($("agregarInput").value));render()}
+
+  f.onsubmit=e=>{
+    e.preventDefault();
+    const t=n(cant.value)*n(precio.value);
+    setDisp(disp()-t);
+    const a=load();
+    a.push({fecha:fecha.value,dist:dist.value,prod:prod.value,total:t});
+    save(a);f.reset();updateTotal();render();
+  };
+
+  function render(){
+    dispTxt.textContent=m(disp());
+    const a=load();
+    list.innerHTML="";
+    let sums={};
+    a.forEach(r=>{
+      sums[r.dist]=(sums[r.dist]||0)+r.total;
+      list.innerHTML+=`
         <div class="item">
-          <div class="itemTop">
-            <div>
-              <div class="itemTitle">${escapeHtml(r.producto || "")}</div>
-              <div class="itemMeta">
-                <span class="badge">${escapeHtml(r.fecha || "")}</span>
-                <span class="badge">${escapeHtml(r.distribucion || "")}</span>
-                <span class="badge">Cant: <b>${num(r.cantidad).toFixed(2).replace(/\.00$/,"")}</b></span>
-                <span class="badge">P/U: <b>${money(r.precio)}</b></span>
-              </div>
-            </div>
-
-            <div class="money">
-              <div class="t">${money(r.total)}</div>
-              <div class="s">Total</div>
-            </div>
-          </div>
-
-          ${r.nota ? `<div class="itemNote">${escapeHtml(r.nota)}</div>` : ""}
-
-          <div class="miniBtns">
-            <button class="btn btn-mini" data-act="edit" data-id="${r.id}">Editar</button>
-            <button class="btn btn-mini btn-danger" data-act="del" data-id="${r.id}">Eliminar</button>
-          </div>
-        </div>
-      `).join("");
-
-      list.querySelectorAll("button[data-act]").forEach(btn => {
-        btn.addEventListener("click", () => {
-          const id = btn.getAttribute("data-id");
-          const act = btn.getAttribute("data-act");
-          if(act === "edit") startEdit(id);
-          if(act === "del") deleteCompra(id);
-        });
-      });
-    }
-
-    form.addEventListener("submit", (e) => {
-      e.preventDefault();
-
-      const fecha = inpFecha.value;
-      const distribucion = (inpDistrib.value || "").trim();
-      const producto = (inpProducto.value || "").trim();
-      const cantidad = num(inpCantidad.value);
-      const precio = num(inpPrecio.value);
-      const nota = (inpNota.value || "").trim();
-
-      if(!fecha || !distribucion || !producto){
-        alert("Completa fecha, distribución y producto.");
-        return;
-      }
-      if(cantidad <= 0){
-        alert("La cantidad debe ser mayor a 0.");
-        return;
-      }
-      if(precio < 0){
-        alert("El precio unitario no puede ser negativo.");
-        return;
-      }
-
-      const total = calcTotalCompra(cantidad, precio);
-      const disponible = getPresupuesto();
-
-      // Si no has definido presupuesto aún, lo dejamos en 0 (igual registra)
-      // Si ya hay, validamos que alcance (opcional, pero útil)
-      if(localStorage.getItem(KEYS.presupuesto) !== null && disponible < total){
-        const ok = confirm(`No alcanza el disponible.\nDisponible: ${money(disponible)}\nCompra: ${money(total)}\n\n¿Guardar de todos modos?`);
-        if(!ok) return;
-      }
-
-      const compras = loadCompras();
-
-      // EDIT
-      if(editId.value){
-        const idx = compras.findIndex(x => x.id === editId.value);
-        if(idx >= 0){
-          const oldTotal = num(compras[idx].total);
-
-          // Ajuste de presupuesto:
-          // 1) devolvemos el total viejo (porque lo estamos reemplazando)
-          // 2) restamos el total nuevo
-          adjustPresupuesto(+oldTotal);
-          adjustPresupuesto(-total);
-
-          compras[idx] = {
-            ...compras[idx],
-            fecha, distribucion, producto, cantidad, precio, total, nota,
-            updatedAt: new Date().toISOString()
-          };
-
-          saveCompras(compras);
-          clearForm();
-          render();
-          return;
-        }
-      }
-
-      // NEW
-      // Ajuste presupuesto: restar el total nuevo
-      adjustPresupuesto(-total);
-
-      compras.push({
-        id: uid(),
-        fecha, distribucion, producto, cantidad, precio, total, nota,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      });
-
-      saveCompras(compras);
-      clearForm();
-      render();
+          <div class="itemTitle">${r.prod}</div>
+          <div class="itemMeta">${r.fecha} • ${r.dist}</div>
+          <div class="money">${m(r.total)}</div>
+        </div>`;
     });
+    sumGrid.innerHTML="";
+    Object.keys(sums).forEach(k=>{
+      sumGrid.innerHTML+=`
+        <div class="sumCard">
+          <div class="k">${k}</div>
+          <div class="v">${m(sums[k])}</div>
+        </div>`;
+    });
+  }
 
-    // Init
-    (function init(){
-      inpFecha.value = todayISO();
-      updateTotalPreview();
-      render();
-    })();
-  </script>
+  fecha.value=new Date().toISOString().slice(0,10);
+  render();
+</script>
 </body>
 </html>
